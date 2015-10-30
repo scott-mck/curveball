@@ -57,11 +57,18 @@
 
         if (ballMesh.position.z <= backWallMesh.position.z + radius) {
           ball.speedZ *= -1;
-        } else if (ballMesh.position.z > -radius && paddleCollision()) {
-          ball.speedZ *= -1;
+        } else if (ballMesh.position.z > -radius) {
+          if (paddleCollision()) {
+            ball.speedZ *= -1;
+          } else {
+            ball.speedX = 0;
+            ball.speedY = 0;
+            ball.speedZ = 0;
+            ballMesh.material.color.setHex(0x990000);
+          }
         }
       }
-      // animate();
+      animate();
 
       function paddleCollision () {
         var points = ball.getCollisionPoints();
