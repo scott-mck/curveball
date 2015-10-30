@@ -16,8 +16,8 @@
       this.posX = (canvasMouseX / renderer.domElement.clientWidth) * 2 - 1;
       this.posY = -(canvasMouseY / renderer.domElement.clientHeight) * 2 + 1;
 
-      this.posX *= 7;
-      this.posY *= 4.2;
+      this.posX *= 34;
+      this.posY *= 21;
     }.bind(this));
   };
 })();
