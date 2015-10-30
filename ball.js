@@ -5,9 +5,11 @@
 
   Ball = function (ballMesh) {
     this.ballMesh = ballMesh;
-    this.speedX = -.5;
-    this.speedY = .2;
-    this.speedZ = -.5;
+    this.speedX = 0;
+    this.speedY = 0;
+    this.speedZ = 0;
+    this.spinX = 0;
+    this.spinY = 0;
   }
 
   Ball.prototype.getCollisionPoints = function () {
@@ -25,5 +27,31 @@
       angle += Math.PI / 4;
     }
     return points;
+  };
+
+  Ball.prototype.resetSpin = function () {
+    this.spinX = 0;
+    this.spinY = 0;
+  };
+
+  Ball.prototype.start = function () {
+    this.speedZ = -.8;
+  };
+
+  Ball.prototype.stop = function () {
+    this.speedX = 0;
+    this.speedY = 0;
+    this.speedZ = 0;
+    this.spinX = 0;
+    this.spinY = 0;
+    ballMesh.material.color.setHex(0x990000);
+  };
+
+  Ball.prototype.updateSpin = function (oldX, oldY, paddleMesh) {
+    this.spinX = Math.abs(paddleMesh.position.x - oldX) / 100;
+    if (paddleMesh.position.x > oldX) this.spinX *= -1;
+
+    this.spinY = Math.abs(paddleMesh.position.y - oldY) / 100;
+    if (paddleMesh.position.y > oldY) this.spinY *= -1;
   };
 })();
