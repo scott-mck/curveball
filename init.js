@@ -13,11 +13,17 @@ init = function () {
   camera.position.z = 25;
 
   ////////////// LIGHT
-  var directionalLight = new THREE.DirectionalLight(0xffffff, 1.1);
-  directionalLight.position.set(1.5, .5, 1);
-  scene.add(directionalLight);
-  var ambientLight = new THREE.AmbientLight(0x404040);
-  scene.add(ambientLight);
+  var light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
+  scene.add( light );
+
+  var ambient = new THREE.AmbientLight(0x404040);
+  scene.add(ambient);
+
+  var spotLight = new THREE.SpotLight(0xffffff, .3);
+  spotLight.position.set(0, 0, 40);
+
+
+  scene.add(spotLight);
 
   ////////////// BALL
   radius = 3;
@@ -25,7 +31,8 @@ init = function () {
   var mat = new THREE.MeshPhongMaterial({
     color: 0x007f00,
     shading: THREE.SmoothShading,
-    shininess: 40
+    // shininess: 30,
+    // specular: 0x303030
   });
   ballMesh = new THREE.Mesh(geom, mat);
   scene.add(ballMesh);
@@ -41,8 +48,6 @@ init = function () {
     color: 0xa8a8a8,
     shading: THREE.SmoothShading,
     shininess: 40,
-    transparent: true,
-    // opacity: .5
   });
 
   backWallMesh = new THREE.Mesh(sideGeometry.clone(), wallMaterial.clone());
