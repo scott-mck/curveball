@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Curveball</title>
+    <script type="application/javascript" src="jquery-2.1.4.min.js"></script>
+		<script type="application/javascript" src="three.min.js"></script>
+  </head>
+  <body>
+    <div id="canvas" style="width: 1000px; height: 600px;"></div>
+
+    <script>
+      var canvasWidth = $('#canvas').width();
+      var canvasHeight = $('#canvas').height();
+      container = document.getElementById('canvas');
+      document.body.appendChild(container);
+      renderer = new THREE.WebGLRenderer();
+      renderer.setPixelRatio(devicePixelRatio);
+      renderer.setSize(canvasWidth, canvasHeight);
+      container.appendChild(renderer.domElement);
+
+      camera = new THREE.PerspectiveCamera(70, canvasWidth / canvasHeight, 1, 1000);
+      camera.position.z = 25;
+      scene = new THREE.Scene();
+
+      ////////////// BALL
+      var geom = new THREE.SphereGeometry(3, 20, 20);
+      var mat = new THREE.MeshPhongMaterial({
+        color: 0x007f00,
+        shading: THREE.SmoothShading,
+        shininess: 40
+      });
+      var ball = new THREE.Mesh(geom, mat);
+      scene.add(ball);
+
+      ////////////// LIGHT
+      var directionalLight = new THREE.DirectionalLight(0xffffff, 1.1);
+      directionalLight.position.set(1, -.5, 1);
+      scene.add(directionalLight);
+      var ambientLight = new THREE.AmbientLight(0x404040);
+      scene.add(ambientLight);
+
+      ////////////// WALL
+      var shape = new THREE.Shape();
+      shape.moveTo(-30, -20);
+      shape.lineTo(30, -20);
+      shape.lineTo(30, 20);
+      shape.lineTo(-30, 20);
+      shape.lineTo(-30, 0);
+      var wallGeometry = new THREE.ShapeGeometry(shape);
+
+      var wallMaterial = new THREE.MeshPhongMaterial({
+        color: 0xa8a8a8,
+        shading: THREE.SmoothShading,
+        shininess: 40
+      });
+
+      var backWall = new THREE.Mesh(wallGeometry.clone(), wallMaterial.clone());
+      backWall.position.z = -70;
+      scene.add(backWall);
+
+      function animate() {
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
+      }
+      animate();
+    </script>
+  </body>
+</html>
