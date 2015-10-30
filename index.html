@@ -20,13 +20,13 @@
       var canvasWidth, canvasHeight;
       var scene, camera, renderer;
       var backWallMesh, leftWallMesh, rightWallMesh, floorMesh, ceilingMesh;
-      var radius, ball, ballMesh, paddle, paddleMesh;
+      var radius, ball, ballMesh;
+      var paddleWidth, paddleHeight, paddle, paddleMesh;
 
       init();
       var ball = new Ball(ballMesh);
       var paddle = new Paddle(paddleMesh);
       renderer.render(scene, camera);
-      // animate();
 
       function animate() {
         requestAnimationFrame(animate);
@@ -57,9 +57,22 @@
 
         if (ballMesh.position.z <= backWallMesh.position.z + radius) {
           ball.speedZ *= -1;
-        } else if (ballMesh.position.z >= radius) {
+        } else if (ballMesh.position.z > -radius && paddleCollision()) {
           ball.speedZ *= -1;
         }
+      }
+      // animate();
+
+      function paddleCollision () {
+        var points = ball.getCollisionPoints();
+        for (var i = 0; i < points.length; i++) {
+          var raycaster = new THREE.Raycaster(points[i], new THREE.Vector3(0, 0, 1));
+          var intersects = raycaster.intersectObjects(scene.children);
+          if (intersects.length > 0) {
+            return true;
+          }
+        }
+        return false;
       }
     </script>
   </body>
