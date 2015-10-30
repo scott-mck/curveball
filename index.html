@@ -34,35 +34,62 @@
 
       ////////////// LIGHT
       var directionalLight = new THREE.DirectionalLight(0xffffff, 1.1);
-      directionalLight.position.set(1, -.5, 1);
+      directionalLight.position.set(1.5, .5, 1);
       scene.add(directionalLight);
       var ambientLight = new THREE.AmbientLight(0x404040);
       scene.add(ambientLight);
 
-      ////////////// WALL
-      var shape = new THREE.Shape();
-      shape.moveTo(-30, -20);
-      shape.lineTo(30, -20);
-      shape.lineTo(30, 20);
-      shape.lineTo(-30, 20);
-      shape.lineTo(-30, 0);
-      var wallGeometry = new THREE.ShapeGeometry(shape);
+      ////////////// WALLS
+      var distance = -50;
+      var wallWidth = 60;
+      var wallHeight = 40;
 
+      var sideGeometry = new THREE.BoxGeometry(wallWidth, wallHeight, 1);
+      var floorGeometry = new THREE.BoxGeometry(wallWidth, wallWidth, 1);
       var wallMaterial = new THREE.MeshPhongMaterial({
         color: 0xa8a8a8,
         shading: THREE.SmoothShading,
-        shininess: 40
+        shininess: 40,
+        transparent: true,
+        opacity: .5
       });
 
-      var backWall = new THREE.Mesh(wallGeometry.clone(), wallMaterial.clone());
-      backWall.position.z = -70;
-      scene.add(backWall);
+      var backWallMesh = new THREE.Mesh(sideGeometry.clone(), wallMaterial.clone());
+      backWallMesh.position.z = distance;
+      scene.add(backWallMesh);
 
-      function animate() {
-        requestAnimationFrame(animate);
+      var leftWallMesh = new THREE.Mesh(sideGeometry.clone(), wallMaterial.clone());
+      leftWallMesh.rotation.y = Math.PI / 2;
+      leftWallMesh.position.x -= wallWidth / 2;
+      leftWallMesh.position.z = distance / 2;
+      scene.add(leftWallMesh);
+
+      var rightWallMesh = new THREE.Mesh(sideGeometry.clone(), wallMaterial.clone());
+      rightWallMesh.rotation.y = Math.PI / 2;
+      rightWallMesh.position.x += wallWidth / 2;
+      rightWallMesh.position.z = distance / 2;
+      scene.add(rightWallMesh);
+
+      var floorMesh = new THREE.Mesh(floorGeometry.clone(), wallMaterial.clone());
+      floorMesh.rotation.x = Math.PI / 2;
+      floorMesh.rotation.z = Math.PI / 2;
+      floorMesh.position.y -= wallHeight / 2;
+      floorMesh.position.z = distance / 2;
+      scene.add(floorMesh);
+
+      var ceilingMesh = new THREE.Mesh(floorGeometry.clone(), wallMaterial.clone());
+      ceilingMesh.rotation.x = Math.PI / 2;
+      ceilingMesh.rotation.z = Math.PI / 2;
+      ceilingMesh.position.y += wallHeight / 2;
+      ceilingMesh.position.z = distance / 2;
+      scene.add(ceilingMesh);
+
+
+      // function animate() {
+      //   requestAnimationFrame(animate);
         renderer.render(scene, camera);
-      }
-      animate();
+      // }
+      // animate();
     </script>
   </body>
 </html>
