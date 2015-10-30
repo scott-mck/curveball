@@ -11,7 +11,45 @@
     <div id="canvas" style="width: 1000px; height: 600px;"></div>
 
     <script>
+      var canvasWidth, canvasHeight;
+      var scene, camera, renderer;
+      var backWallMesh, leftWallMesh, rightWallMesh, floorMesh, ceilingMesh;
+      var radius, ball, ballMesh;
+
       init();
+      var ball = new Ball(ballMesh);
+      renderer.render(scene, camera);
+      // animate();
+
+      function animate() {
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
+
+        detectCollisions();
+        ballMesh.position.x += ball.speedX;
+        ballMesh.position.y += ball.speedY;
+        ballMesh.position.z += ball.speedZ;
+      }
+
+      function detectCollisions() {
+        if (ballMesh.position.x <= leftWallMesh.position.x + radius) {
+          ball.speedX *= -1;
+        } else if (ballMesh.position.x >= rightWallMesh.position.x - radius) {
+          ball.speedX *= -1;
+        }
+
+        if (ballMesh.position.y <= floorMesh.position.y + radius) {
+          ball.speedY *= -1;
+        } else if (ballMesh.position.y >= ceilingMesh.position.y - radius) {
+          ball.speedY *= -1;
+        }
+
+        if (ballMesh.position.z <= backWallMesh.position.z + radius) {
+          ball.speedZ *= -1;
+        } else if (ballMesh.position.z >= radius) {
+          ball.speedZ *= -1;
+        }
+      }
     </script>
   </body>
 </html>
