@@ -6,18 +6,25 @@
 		<script type="application/javascript" src="three.min.js"></script>
 		<script type="application/javascript" src="init.js"></script>
 		<script type="application/javascript" src="ball.js"></script>
+		<script type="application/javascript" src="paddle.js"></script>
   </head>
   <body>
     <div id="canvas" style="width: 1000px; height: 600px;"></div>
+    <script>
+      $('#canvas').on('mouseenter', function () {
+        $('#canvas').css('cursor', 'none');
+      });
+    </script>
 
     <script>
       var canvasWidth, canvasHeight;
       var scene, camera, renderer;
       var backWallMesh, leftWallMesh, rightWallMesh, floorMesh, ceilingMesh;
-      var radius, ball, ballMesh;
+      var radius, ball, ballMesh, paddle, paddleMesh;
 
       init();
       var ball = new Ball(ballMesh);
+      var paddle = new Paddle(paddleMesh);
       renderer.render(scene, camera);
       // animate();
 
@@ -26,6 +33,10 @@
         renderer.render(scene, camera);
 
         detectCollisions();
+
+        paddleMesh.position.x = paddle.posX;
+        paddleMesh.position.y = paddle.posY;
+
         ballMesh.position.x += ball.speedX;
         ballMesh.position.y += ball.speedY;
         ballMesh.position.z += ball.speedZ;
