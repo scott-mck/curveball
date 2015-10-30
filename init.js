@@ -85,12 +85,13 @@ init = function () {
   ////////////// PADDLE
   paddleWidth = 12;
   paddleHeight = 8;
-  var geom = new THREE.BoxGeometry(paddleWidth, paddleHeight, .5);
+  var geom = new THREE.BoxGeometry(paddleWidth, paddleHeight, .1);
   var mat = new THREE.MeshBasicMaterial({
     color: 0x0000cc,
     transparent: true,
     opacity: .4
   });
   paddleMesh = new THREE.Mesh(geom, mat);
+  paddleMesh.position.z = radius;
   scene.add(paddleMesh);
 };
