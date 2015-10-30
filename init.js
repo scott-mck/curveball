@@ -10,27 +10,30 @@ init = function () {
 
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(70, canvasWidth / canvasHeight, 1, 1000);
-  camera.position.z = 28;
+  camera.position.z = 25;
 
   ////////////// LIGHT
   var ambient = new THREE.AmbientLight(0x404040);
   scene.add(ambient);
 
-  var light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
+  var light = new THREE.PointLight(0xffffff, 1, 100);
+  light.position.set(10, 8, 20);
   scene.add(light);
-
-  var spotLight = new THREE.SpotLight(0xffffff, .3);
-  spotLight.position.set(0, 0, 40);
-  scene.add(spotLight);
 
   ////////////// BALL
   radius = 3;
   var geom = new THREE.SphereGeometry(radius, 20, 20);
   var mat = new THREE.MeshPhongMaterial({
     color: 0x006600,
+    specular: 0xffffff,
+    shininess: 6,
     shading: THREE.SmoothShading
   });
   ballMesh = new THREE.Mesh(geom, mat);
+
+  var light = new THREE.PointLight(0x006600, 1, 40);
+  light.position.copy(ballMesh.position);
+  ballMesh.add(light);
   scene.add(ballMesh);
 
   ////////////// WALLS
@@ -76,4 +79,15 @@ init = function () {
   ceilingMesh.position.y += wallHeight / 2;
   ceilingMesh.position.z = -distance / 2;
   scene.add(ceilingMesh);
+
+  ////////////// PADDLE
+  var geom = new THREE.BoxGeometry(2.5, 1.7 , .1);
+  var mat = new THREE.MeshBasicMaterial({
+    color: 0x0000cc,
+    transparent: true,
+    opacity: .5
+  });
+  paddleMesh = new THREE.Mesh(geom, mat);
+  paddleMesh.position.z = 19;
+  scene.add(paddleMesh);
 };
