@@ -44,7 +44,7 @@
       var ball = new Ball(ballMesh);
       var paddle = new Paddle(paddleMesh);
       renderer.render(scene, camera);
-      animate();
+      // animate();
 
       function animate() {
         requestAnimationFrame(animate);
@@ -91,11 +91,16 @@
             getPaddleSpeed();
           } else {
             ball.stop();
+            setTimeout(function () {
+              ball.reset();
+            }, 2000);
           }
         }
       }
 
       function paddleCollision () {
+        if (ball.dead) return;
+
         var points = ball.getCollisionPoints();
         for (var i = 0; i < points.length; i++) {
           var raycaster = new THREE.Raycaster(points[i], new THREE.Vector3(0, 0, 1));

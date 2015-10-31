@@ -11,6 +11,7 @@
     this.spinX = 0;
     this.spinY = 0;
     this.inPlay = false;
+    this.dead = false;
   }
 
   Ball.prototype.getCollisionPoints = function () {
@@ -30,6 +31,19 @@
     return points;
   };
 
+  Ball.prototype.reset = function () {
+    this.spinX = 0;
+    this.spinY = 0;
+    this.speedX = 0;
+    this.speedY = 0;
+    this.speedZ = 0;
+    this.inPlay = false;
+    this.dead = false;
+    this.ballMesh.position.set(0, 0, -radius);
+    ballMesh.material.color.setHex(0x006600);
+    ballMesh.light.color.setHex(0x006600);
+  };
+
   Ball.prototype.resetSpin = function () {
     this.spinX = 0;
     this.spinY = 0;
@@ -38,6 +52,7 @@
   Ball.prototype.start = function () {
     this.speedZ = -.8;
     this.inPlay = true;
+    this.dead = false;
   };
 
   Ball.prototype.stop = function () {
@@ -47,7 +62,9 @@
     this.spinX = 0;
     this.spinY = 0;
     ballMesh.material.color.setHex(0x990000);
+    ballMesh.light.color.setHex(0x990000);
     this.inPlay = false;
+    this.dead = true;
   };
 
   Ball.prototype.updateSpin = function (oldX, oldY, paddleMesh) {
