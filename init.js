@@ -35,6 +35,7 @@ init = function () {
   var light = new THREE.PointLight(0x006600, 1, 40);
   light.position.copy(ballMesh.position);
   ballMesh.add(light);
+  ballMesh.light = light;
   scene.add(ballMesh);
 
   ////////////// WALLS
