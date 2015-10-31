@@ -16,7 +16,7 @@ init = function () {
   var ambient = new THREE.AmbientLight(0x404040);
   scene.add(ambient);
 
-  var light = new THREE.PointLight(0xffffff, 1, 100);
+  var light = new THREE.PointLight(0xffffff, 1, 150);
   light.position.set(10, 8, 5);
   scene.add(light);
 
@@ -42,7 +42,7 @@ init = function () {
   var wallWidth = 60;
   var wallHeight = 40;
   var wallDepth = 1;
-  var distance = 70;
+  var distance = 90;
 
   var backGeometry = new THREE.BoxGeometry(wallWidth, wallHeight, wallDepth);
   var sideGeometry = new THREE.BoxGeometry(distance, wallHeight, wallDepth);
@@ -50,7 +50,7 @@ init = function () {
   var wallMaterial = new THREE.MeshPhongMaterial({
     color: 0xa8a8a8,
     shading: THREE.SmoothShading,
-    shininess: 40,
+    shininess: 90,
   });
 
   backWallMesh = new THREE.Mesh(backGeometry.clone(), wallMaterial.clone());
