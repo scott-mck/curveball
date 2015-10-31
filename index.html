@@ -16,9 +16,18 @@
           $('#canvas').css('cursor', 'none');
         });
 
-        $('#canvas').click(function () {
+        $('#canvas').on('mousedown', function () {
+          if (ball.inPlay) return;
+
           if (paddleCollision()) {
-            ball.start();
+            var oldX = paddleMesh.position.x;
+            var oldY = paddleMesh.position.y;
+            $('#canvas').one('mouseup', function () {
+              if (paddleCollision()) {
+                ball.updateSpin(oldX, oldY, paddleMesh);
+                ball.start();
+              }
+            });
           }
         });
       });
@@ -40,7 +49,6 @@
       function animate() {
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
-
 
         detectCollisions();
 
@@ -74,11 +82,7 @@
         } else if (ballMesh.position.z > -radius) {
           if (paddleCollision()) {
             ball.speedZ *= -1;
-            var oldX = paddleMesh.position.x;
-            var oldY = paddleMesh.position.y;
-            setTimeout(function () {
-              ball.updateSpin(oldX, oldY, paddleMesh);
-            }, 0);
+            getPaddleSpeed();
           } else {
             ball.stop();
           }
@@ -95,6 +99,14 @@
           }
         }
         return false;
+      }
+
+      function getPaddleSpeed () {
+        var oldX = paddleMesh.position.x;
+        var oldY = paddleMesh.position.y;
+        setTimeout(function () {
+          ball.updateSpin(oldX, oldY, paddleMesh);
+        }, 0);
       }
     </script>
   </body>
