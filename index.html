@@ -65,22 +65,28 @@
 
       function detectCollisions() {
         if (ballMesh.position.x <= leftWallMesh.position.x + radius) {
+          ballMesh.position.x = leftWallMesh.position.x + radius;
           ball.speedX *= -1;
         } else if (ballMesh.position.x >= rightWallMesh.position.x - radius) {
+          ballMesh.position.x = rightWallMesh.position.x - radius;
           ball.speedX *= -1;
         }
 
         if (ballMesh.position.y <= floorMesh.position.y + radius) {
+          ballMesh.position.y = floorMesh.position.y + radius;
           ball.speedY *= -1;
         } else if (ballMesh.position.y >= ceilingMesh.position.y - radius) {
+          ballMesh.position.y = ceilingMesh.position.y - radius;
           ball.speedY *= -1;
         }
 
         if (ballMesh.position.z <= backWallMesh.position.z + radius) {
+          ballMesh.position.z = backWallMesh.position.z + radius;
           ball.speedZ *= -1;
           ball.resetSpin();
         } else if (ballMesh.position.z > -radius) {
           if (paddleCollision()) {
+            ballMesh.position.z = -radius;
             ball.speedZ *= -1;
             getPaddleSpeed();
           } else {
