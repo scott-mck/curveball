@@ -53,10 +53,6 @@ init = function () {
     shininess: 90,
   });
 
-  backWallMesh = new THREE.Mesh(backGeometry.clone(), wallMaterial.clone());
-  backWallMesh.position.z = -distance;
-  scene.add(backWallMesh);
-
   leftWallMesh = new THREE.Mesh(sideGeometry.clone(), wallMaterial.clone());
   leftWallMesh.rotation.y = Math.PI / 2;
   leftWallMesh.position.x -= (wallWidth / 2) - (wallDepth / 2);
@@ -83,7 +79,7 @@ init = function () {
   ceilingMesh.position.z = -distance / 2;
   scene.add(ceilingMesh);
 
-  ////////////// PADDLE
+  ////////////// PADDLES
   paddleWidth = 12;
   paddleHeight = 8;
   var geom = new THREE.BoxGeometry(paddleWidth, paddleHeight, .1);
@@ -92,7 +88,12 @@ init = function () {
     transparent: true,
     opacity: .4
   });
-  paddleMesh = new THREE.Mesh(geom, mat);
-  paddleMesh.position.z = radius;
-  scene.add(paddleMesh);
+
+  playerMesh = new THREE.Mesh(geom.clone(), mat.clone());
+  playerMesh.position.z = radius;
+  scene.add(playerMesh);
+
+  compMesh = new THREE.Mesh(geom.clone(), mat.clone());
+  compMesh.position.z = -distance;
+  scene.add(compMesh);
 };
