@@ -1,8 +1,8 @@
 addEvents = function () {
   $('#canvas').css('cursor', 'none');
 
-  $(document).on('mousemove', function () {
-    player.getMousePos();
+  $(document).on('mousemove', function (event) {
+    player.getMousePos(event);
   });
 
   $('#canvas').on('mousedown', function () {
