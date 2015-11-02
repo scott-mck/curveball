@@ -31,9 +31,6 @@
       animate();
 
       function animate() {
-        requestAnimationFrame(animate);
-        renderer.render(scene, camera);
-
         detectCollisions();
         player.updatePos();
         ball.spin();
@@ -41,9 +38,18 @@
         ballMesh.position.x += ball.speedX;
         ballMesh.position.y += ball.speedY;
         ballMesh.position.z += ball.speedZ;
+
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
       }
 
       function detectCollisions() {
+        detectCollisionX();
+        detectCollisionY();
+        detectCollisionZ();
+      }
+
+      function detectCollisionX () {
         if (ballMesh.position.x <= leftWallMesh.position.x + radius) {
           ballMesh.position.x = leftWallMesh.position.x + radius;
           ball.speedX *= -1;
@@ -51,7 +57,9 @@
           ballMesh.position.x = rightWallMesh.position.x - radius;
           ball.speedX *= -1;
         }
+      };
 
+      function detectCollisionY () {
         if (ballMesh.position.y <= floorMesh.position.y + radius) {
           ballMesh.position.y = floorMesh.position.y + radius;
           ball.speedY *= -1;
@@ -59,9 +67,11 @@
           ballMesh.position.y = ceilingMesh.position.y - radius;
           ball.speedY *= -1;
         }
+      };
 
+      function detectCollisionZ () {
         if (ballMesh.position.z < -distance + radius) {
-          if (paddleCollision(-1)) {
+          if (checkPaddleCollision(-1)) {
             ballMesh.position.z = -distance + radius;
             ball.speedZ *= -1;
             getPaddleSpeed();
@@ -72,7 +82,7 @@
             }, 1000);
           }
         } else if (ballMesh.position.z > -radius) {
-          if (paddleCollision(1)) {
+          if (checkPaddleCollision(1)) {
             ballMesh.position.z = -radius;
             ball.speedZ *= -1;
             getPaddleSpeed();
@@ -83,9 +93,9 @@
             }, 1000);
           }
         }
-      }
+      };
 
-      function paddleCollision (dir) {
+      function checkPaddleCollision (dir) {
         if (ball.dead) return;
 
         var points = ball.getCollisionPoints();
