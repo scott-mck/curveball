@@ -31,13 +31,10 @@
       animate();
 
       function animate() {
-        detectCollisions();
         player.updatePos();
+        detectCollisions();
+        ball.updatePos();
         ball.spin();
-
-        ballMesh.position.x += ball.speedX;
-        ballMesh.position.y += ball.speedY;
-        ballMesh.position.z += ball.speedZ;
 
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
@@ -74,7 +71,7 @@
           if (checkPaddleCollision(-1)) {
             ballMesh.position.z = -distance + radius;
             ball.speedZ *= -1;
-            getPaddleSpeed();
+            getCompPaddleSpeed();
           } else {
             ball.stop();
             setTimeout(function () {
@@ -85,7 +82,7 @@
           if (checkPaddleCollision(1)) {
             ballMesh.position.z = -radius;
             ball.speedZ *= -1;
-            getPaddleSpeed();
+            getPlayerPaddleSpeed();
           } else {
             ball.stop();
             setTimeout(function () {
@@ -111,7 +108,15 @@
         return false;
       }
 
-      function getPaddleSpeed () {
+      function getCompPaddleSpeed () {
+        var oldX = compMesh.position.x;
+        var oldY = compMesh.position.y;
+        setTimeout(function () {
+          ball.updateSpin(oldX, oldY, compMesh);
+        }, 0);
+      }
+
+      function getPlayerPaddleSpeed () {
         var oldX = playerMesh.position.x;
         var oldY = playerMesh.position.y;
         setTimeout(function () {
