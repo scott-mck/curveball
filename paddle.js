@@ -10,6 +10,7 @@
     this.speedX = 0;
     this.speedY = 0;
 
+    this.canMove = false;
     this.maxSpeed = .3;
   };
 
@@ -26,6 +27,8 @@
   };
 
   Paddle.prototype.move = function (ballMesh) {
+    if (!this.canMove) return;
+
     var diffX = ballMesh.position.x - this.paddleMesh.position.x;
     var diffY = ballMesh.position.y - this.paddleMesh.position.y;
     var speedX = diffX;
@@ -40,6 +43,13 @@
     this.posX += speedX;
     this.posY += speedY;
     this.updatePos();
+  };
+
+  Paddle.prototype.resetPos = function () {
+    this.posX = 0;
+    this.posY = 0;
+    this.paddleMesh.position.x = 0;
+    this.paddleMesh.position.y = 0;
   };
 
   Paddle.prototype.updatePos = function () {
