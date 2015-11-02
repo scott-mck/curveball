@@ -8,6 +8,7 @@
 		<script type="application/javascript" src="add_events.js"></script>
 		<script type="application/javascript" src="ball.js"></script>
 		<script type="application/javascript" src="paddle.js"></script>
+		<script type="application/javascript" src="game.js"></script>
   </head>
   <body>
     <div id="canvas" style="width: 1000px; height: 600px;"></div>
@@ -28,112 +29,9 @@
 
       init();
       addEvents();
-      animate();
 
-      function animate() {
-        detectCollisions();
-
-        player.updatePos();
-        comp.move(ballMesh);
-
-        ball.updatePos();
-        ball.spin();
-
-        requestAnimationFrame(animate);
-        renderer.render(scene, camera);
-      }
-
-      function detectCollisions() {
-        detectCollisionX();
-        detectCollisionY();
-        detectCollisionZ();
-      }
-
-      function detectCollisionX () {
-        if (ballMesh.position.x <= leftWallMesh.position.x + radius) {
-          ballMesh.position.x = leftWallMesh.position.x + radius;
-          ball.speedX *= -1;
-        } else if (ballMesh.position.x >= rightWallMesh.position.x - radius) {
-          ballMesh.position.x = rightWallMesh.position.x - radius;
-          ball.speedX *= -1;
-        }
-      };
-
-      function detectCollisionY () {
-        if (ballMesh.position.y <= floorMesh.position.y + radius) {
-          ballMesh.position.y = floorMesh.position.y + radius;
-          ball.speedY *= -1;
-        } else if (ballMesh.position.y >= ceilingMesh.position.y - radius) {
-          ballMesh.position.y = ceilingMesh.position.y - radius;
-          ball.speedY *= -1;
-        }
-      };
-
-      function detectCollisionZ () {
-        if (ballMesh.position.z < -distance + radius) {
-          if (checkPaddleCollision(-1)) {
-            ballMesh.position.z = -distance + radius;
-            ball.speedZ *= -1;
-            getCompPaddleSpeed();
-          } else {
-            stopPlay();
-          }
-        } else if (ballMesh.position.z > -radius) {
-          if (checkPaddleCollision(1)) {
-            ballMesh.position.z = -radius;
-            ball.speedZ *= -1;
-            getPlayerPaddleSpeed();
-          } else {
-            stopPlay();
-          }
-        }
-      };
-
-      function checkPaddleCollision (dir) {
-        if (ball.dead) return;
-
-        var points = ball.getCollisionPoints();
-        var vectorDir = new THREE.Vector3();
-        vectorDir.z = 1 * dir;
-        for (var i = 0; i < points.length; i++) {
-          var raycaster = new THREE.Raycaster(points[i], vectorDir);
-          var intersects = raycaster.intersectObjects(scene.children);
-          if (intersects.length > 0) {
-            return true;
-          }
-        }
-        return false;
-      }
-
-      function getCompPaddleSpeed () {
-        var oldX = compMesh.position.x;
-        var oldY = compMesh.position.y;
-        setTimeout(function () {
-          ball.updateSpin(oldX, oldY, compMesh);
-        }, 0);
-      }
-
-      function getPlayerPaddleSpeed () {
-        var oldX = playerMesh.position.x;
-        var oldY = playerMesh.position.y;
-        setTimeout(function () {
-          ball.updateSpin(oldX, oldY, playerMesh);
-        }, 0);
-      }
-
-      function startPlay () {
-        ball.start();
-        comp.canMove = true;
-      }
-
-      function stopPlay () {
-        ball.stop();
-        comp.canMove = false;
-        setTimeout(function () {
-          ball.reset();
-          comp.resetPos();
-        }, 1000);
-      }
+      var game = new Game(ball, player, comp);
+      game.animate();
     </script>
   </body>
 </html>
