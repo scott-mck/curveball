@@ -14,7 +14,7 @@ addEvents = function () {
       $('#canvas').one('mouseup', function () {
         if (checkPaddleCollision(-1)) {
           ball.updateSpin(oldX, oldY, playerMesh);
-          ball.start();
+          startPlay();
         }
       });
     }
