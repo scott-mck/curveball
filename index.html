@@ -5,34 +5,12 @@
     <script type="application/javascript" src="jquery-2.1.4.min.js"></script>
 		<script type="application/javascript" src="three.min.js"></script>
 		<script type="application/javascript" src="init.js"></script>
+		<script type="application/javascript" src="add_events.js"></script>
 		<script type="application/javascript" src="ball.js"></script>
 		<script type="application/javascript" src="paddle.js"></script>
   </head>
   <body>
     <div id="canvas" style="width: 1000px; height: 600px;"></div>
-    <script>
-      $(document).ready(function () {
-        $('#canvas').on('mouseenter', function () {
-          $('#canvas').css('cursor', 'none');
-        });
-
-        $('#canvas').on('mousedown', function () {
-          if (ball.inPlay) return;
-
-          if (paddleCollision(-1)) {
-            var oldX = playerMesh.position.x;
-            var oldY = playerMesh.position.y;
-            $('#canvas').one('mouseup', function () {
-              if (paddleCollision(-1)) {
-                ball.updateSpin(oldX, oldY, playerMesh);
-                ball.start();
-              }
-            });
-          }
-        });
-      });
-    </script>
-
     <script>
       var canvasWidth, canvasHeight;
       var scene, camera, renderer;
@@ -48,10 +26,11 @@
       var paddleWidth = 12;
       var paddleHeight = 8;
 
-      init();
       var ball = new Ball(ballMesh);
       var player = new Paddle(playerMesh);
       var comp = new Paddle(compMesh);
+      init();
+      addEvents();
 
       animate();
 
@@ -59,8 +38,8 @@
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
 
-        player.updatePos();
         detectCollisions();
+        player.updatePos();
         ball.spin();
 
         ballMesh.position.x += ball.speedX;
