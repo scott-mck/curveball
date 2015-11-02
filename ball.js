@@ -49,6 +49,14 @@
     this.spinY = 0;
   };
 
+  Ball.prototype.spin = function () {
+    this.speedX += this.spinX;
+    this.speedY += this.spinY;
+
+    this.spinX *= .99;
+    this.spinY *= .99;
+  };
+
   Ball.prototype.start = function () {
     this.speedZ = -.8;
     this.inPlay = true;
