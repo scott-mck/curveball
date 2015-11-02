@@ -44,7 +44,7 @@
       var ball = new Ball(ballMesh);
       var paddle = new Paddle(paddleMesh);
       renderer.render(scene, camera);
-      // animate();
+      animate();
 
       function animate() {
         requestAnimationFrame(animate);
@@ -55,8 +55,9 @@
         paddleMesh.position.x = paddle.posX;
         paddleMesh.position.y = paddle.posY;
 
-        ball.speedX += ball.spinX;
-        ball.speedY += ball.spinY;
+        // ball.speedX += ball.spinX;
+        // ball.speedY += ball.spinY;
+        ball.spin();
 
         ballMesh.position.x += ball.speedX;
         ballMesh.position.y += ball.speedY;
@@ -93,7 +94,7 @@
             ball.stop();
             setTimeout(function () {
               ball.reset();
-            }, 2000);
+            }, 1000);
           }
         }
       }
