@@ -21,7 +21,6 @@ init = function () {
   scene.add(light);
 
   ////////////// BALL
-  radius = 3;
   var geom = new THREE.SphereGeometry(radius, 20, 20);
   var mat = new THREE.MeshPhongMaterial({
     color: 0x006600,
@@ -39,11 +38,6 @@ init = function () {
   scene.add(ballMesh);
 
   ////////////// WALLS
-  var wallWidth = 60;
-  var wallHeight = 40;
-  var wallDepth = 1;
-  var distance = 90;
-
   var backGeometry = new THREE.BoxGeometry(wallWidth, wallHeight, wallDepth);
   var sideGeometry = new THREE.BoxGeometry(distance, wallHeight, wallDepth);
   var floorGeometry = new THREE.BoxGeometry(distance, wallWidth, wallDepth);
@@ -80,8 +74,6 @@ init = function () {
   scene.add(ceilingMesh);
 
   ////////////// PADDLES
-  paddleWidth = 12;
-  paddleHeight = 8;
   var geom = new THREE.BoxGeometry(paddleWidth, paddleHeight, .1);
   var mat = new THREE.MeshBasicMaterial({
     color: 0x0000cc,

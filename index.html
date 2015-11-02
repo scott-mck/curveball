@@ -36,15 +36,22 @@
     <script>
       var canvasWidth, canvasHeight;
       var scene, camera, renderer;
-      var backWallMesh, leftWallMesh, rightWallMesh, floorMesh, ceilingMesh;
-      var radius, ball, ballMesh;
-      var paddleWidth, paddleHeight, player, playerMesh, comp, compMesh;
+      var leftWallMesh, rightWallMesh, floorMesh, ceilingMesh;
+      var ballMesh;
+      var player, playerMesh, comp, compMesh;
+
+      var wallWidth = 60;
+      var wallHeight = 40;
+      var wallDepth = 1;
+      var distance = 90;
+      var radius = 3;
+      var paddleWidth = 12;
+      var paddleHeight = 8;
 
       init();
       var ball = new Ball(ballMesh);
       var player = new Paddle(playerMesh);
       var comp = new Paddle(compMesh);
-      renderer.render(scene, camera);
       animate();
 
       function animate() {
