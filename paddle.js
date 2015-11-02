@@ -7,7 +7,21 @@
     this.speedY = 0;
 
     this.canMove = false;
-    this.maxSpeed = .3;
+    this.maxSpeed = .25;
+  };
+
+  Paddle.prototype.boundPos = function () {
+    if (this.posX < leftWallMesh.position.x) {
+      this.posX = leftWallMesh.position.x;
+    } else if (this.posX > rightWallMesh.position.x) {
+      this.posX = rightWallMesh.position.x;
+    }
+
+    if (this.posY < floorMesh.position.y) {
+      this.posY = floorMesh.position.y;
+    } else if (this.posY > ceilingMesh.position.y) {
+      this.posY = ceilingMesh.position.y;
+    }
   };
 
   Paddle.prototype.getMousePos = function (event) {
@@ -22,11 +36,11 @@
     this.posY *= 21;
   };
 
-  Paddle.prototype.move = function (ballMesh) {
+  Paddle.prototype.move = function (ball) {
     if (!this.canMove) return;
 
-    var diffX = ballMesh.position.x - this.paddleMesh.position.x;
-    var diffY = ballMesh.position.y - this.paddleMesh.position.y;
+    var diffX = ball.ballMesh.position.x - this.paddleMesh.position.x;
+    var diffY = ball.ballMesh.position.y - this.paddleMesh.position.y;
     var speedX = diffX;
     var speedY = diffY;
 
@@ -38,6 +52,8 @@
 
     this.posX += speedX;
     this.posY += speedY;
+
+    this.boundPos();
     this.updatePos();
   };
 
