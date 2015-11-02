@@ -15,8 +15,8 @@
       var canvasWidth, canvasHeight;
       var scene, camera, renderer;
       var leftWallMesh, rightWallMesh, floorMesh, ceilingMesh;
-      var ballMesh;
-      var player, playerMesh, comp, compMesh;
+      var ballMesh, playerMesh, compMesh;
+      var ball, player, comp;
 
       var wallWidth = 60;
       var wallHeight = 40;
@@ -26,12 +26,8 @@
       var paddleWidth = 12;
       var paddleHeight = 8;
 
-      var ball = new Ball(ballMesh);
-      var player = new Paddle(playerMesh);
-      var comp = new Paddle(compMesh);
       init();
       addEvents();
-
       animate();
 
       function animate() {

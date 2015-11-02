@@ -88,4 +88,9 @@ init = function () {
   compMesh = new THREE.Mesh(geom.clone(), mat.clone());
   compMesh.position.z = -distance;
   scene.add(compMesh);
+
+  ////////////// CREATE BALL AND PADDLES
+  ball = new Ball(ballMesh);
+  player = new Paddle(playerMesh);
+  comp = new Paddle(compMesh);
 };
