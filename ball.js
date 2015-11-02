@@ -75,6 +75,12 @@
     this.dead = true;
   };
 
+  Ball.prototype.updatePos = function () {
+    this.ballMesh.position.x += this.speedX;
+    this.ballMesh.position.y += this.speedY;
+    this.ballMesh.position.z += this.speedZ;
+  };
+
   Ball.prototype.updateSpin = function (oldX, oldY, paddleMesh) {
     this.spinX = Math.abs(paddleMesh.position.x - oldX) / 100;
     if (paddleMesh.position.x > oldX) this.spinX *= -1;
