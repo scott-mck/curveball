@@ -76,10 +76,7 @@
             ball.speedZ *= -1;
             getCompPaddleSpeed();
           } else {
-            ball.stop();
-            setTimeout(function () {
-              ball.reset();
-            }, 1000);
+            stopPlay();
           }
         } else if (ballMesh.position.z > -radius) {
           if (checkPaddleCollision(1)) {
@@ -87,10 +84,7 @@
             ball.speedZ *= -1;
             getPlayerPaddleSpeed();
           } else {
-            ball.stop();
-            setTimeout(function () {
-              ball.reset();
-            }, 1000);
+            stopPlay();
           }
         }
       };
@@ -125,6 +119,20 @@
         setTimeout(function () {
           ball.updateSpin(oldX, oldY, playerMesh);
         }, 0);
+      }
+
+      function startPlay () {
+        ball.start();
+        comp.canMove = true;
+      }
+
+      function stopPlay () {
+        ball.stop();
+        comp.canMove = false;
+        setTimeout(function () {
+          ball.reset();
+          comp.resetPos();
+        }, 1000);
       }
     </script>
   </body>
