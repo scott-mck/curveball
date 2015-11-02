@@ -31,8 +31,11 @@
       animate();
 
       function animate() {
-        player.updatePos();
         detectCollisions();
+
+        player.updatePos();
+        comp.move(ballMesh);
+
         ball.updatePos();
         ball.spin();
 
