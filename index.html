@@ -59,11 +59,8 @@
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
 
+        player.updatePos();
         detectCollisions();
-
-        playerMesh.position.x = player.posX;
-        playerMesh.position.y = player.posY;
-
         ball.spin();
 
         ballMesh.position.x += ball.speedX;

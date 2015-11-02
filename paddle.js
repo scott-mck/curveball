@@ -10,10 +10,10 @@
     this.speedX = 0;
     this.speedY = 0;
 
-    $(document).on('mousemove', this.updateMouse.bind(this));
+    $(document).on('mousemove', this.getMousePos.bind(this));
   };
 
-  Paddle.prototype.updateMouse = function (event) {
+  Paddle.prototype.getMousePos = function (event) {
     var canvasBox = renderer.domElement.getBoundingClientRect();
     var canvasMouseX = event.clientX - canvasBox.left;
     var canvasMouseY = event.clientY - canvasBox.top;
@@ -26,5 +26,10 @@
 
     this.posX *= 34;
     this.posY *= 21;
+  };
+
+  Paddle.prototype.updatePos = function () {
+    this.paddleMesh.position.x = this.posX;
+    this.paddleMesh.position.y = this.posY;
   };
 })();
