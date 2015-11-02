@@ -19,11 +19,11 @@
         $('#canvas').on('mousedown', function () {
           if (ball.inPlay) return;
 
-          if (paddleCollision()) {
+          if (paddleCollision(-1)) {
             var oldX = playerMesh.position.x;
             var oldY = playerMesh.position.y;
             $('#canvas').one('mouseup', function () {
-              if (paddleCollision()) {
+              if (paddleCollision(-1)) {
                 ball.updateSpin(oldX, oldY, playerMesh);
                 ball.start();
               }
@@ -52,6 +52,7 @@
       var ball = new Ball(ballMesh);
       var player = new Paddle(playerMesh);
       var comp = new Paddle(compMesh);
+
       animate();
 
       function animate() {
@@ -87,30 +88,39 @@
           ball.speedY *= -1;
         }
 
-        // if (ballMesh.position.z <= backWallMesh.position.z + radius) {
-        //   ballMesh.position.z = backWallMesh.position.z + radius;
-        //   ball.speedZ *= -1;
-        //   ball.resetSpin();
-        // } else if (ballMesh.position.z > -radius) {
-        //   if (paddleCollision()) {
-        //     ballMesh.position.z = -radius;
-        //     ball.speedZ *= -1;
-        //     getPaddleSpeed();
-        //   } else {
-        //     ball.stop();
-        //     setTimeout(function () {
-        //       ball.reset();
-        //     }, 1000);
-        //   }
-        // }
+        if (ballMesh.position.z < -distance + radius) {
+          if (paddleCollision(-1)) {
+            ballMesh.position.z = -distance + radius;
+            ball.speedZ *= -1;
+            getPaddleSpeed();
+          } else {
+            ball.stop();
+            setTimeout(function () {
+              ball.reset();
+            }, 1000);
+          }
+        } else if (ballMesh.position.z > -radius) {
+          if (paddleCollision(1)) {
+            ballMesh.position.z = -radius;
+            ball.speedZ *= -1;
+            getPaddleSpeed();
+          } else {
+            ball.stop();
+            setTimeout(function () {
+              ball.reset();
+            }, 1000);
+          }
+        }
       }
 
-      function paddleCollision () {
+      function paddleCollision (dir) {
         if (ball.dead) return;
 
         var points = ball.getCollisionPoints();
+        var vectorDir = new THREE.Vector3();
+        vectorDir.z = 1 * dir;
         for (var i = 0; i < points.length; i++) {
-          var raycaster = new THREE.Raycaster(points[i], new THREE.Vector3(0, 0, 1));
+          var raycaster = new THREE.Raycaster(points[i], vectorDir);
           var intersects = raycaster.intersectObjects(scene.children);
           if (intersects.length > 0) {
             return true;
