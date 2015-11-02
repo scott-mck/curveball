@@ -1,8 +1,4 @@
 (function () {
-  if (typeof Paddle === 'undefined') {
-    window.Paddle = {};
-  }
-
   Paddle = function (paddleMesh) {
     this.paddleMesh = paddleMesh;
     this.posX = 0;

@@ -1,8 +1,4 @@
 (function () {
-  if (typeof Ball === 'undefined') {
-    window.Ball = {};
-  }
-
   Ball = function (ballMesh) {
     this.ballMesh = ballMesh;
     this.speedX = 0;
