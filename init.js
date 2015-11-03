@@ -43,6 +43,7 @@ init = function () {
   var floorGeometry = new THREE.BoxGeometry(distance, wallWidth, wallDepth);
   var wallMaterial = new THREE.MeshPhongMaterial({
     color: 0xa8a8a8,
+    specular: 0x444444,
     shading: THREE.SmoothShading,
     shininess: 90,
   });
