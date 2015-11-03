@@ -7,7 +7,7 @@
     this.speedY = 0;
 
     this.canMove = false;
-    this.maxSpeed = .25;
+    this.maxSpeed = .3;
   };
 
   Paddle.prototype.boundPos = function () {
@@ -44,11 +44,15 @@
     var speedX = diffX;
     var speedY = diffY;
 
-    if (Math.abs(diffX) > this.maxSpeed) speedX = this.maxSpeed;
-    if (Math.abs(diffY) > this.maxSpeed) speedY = this.maxSpeed;
+    if (Math.abs(diffX) > this.maxSpeed) {
+      speedX = this.maxSpeed;
+      if (diffX < 0) speedX *= -1;
+    }
 
-    if (diffX < 0) speedX *= -1;
-    if (diffY < 0) speedY *= -1;
+    if (Math.abs(diffY) > this.maxSpeed) {
+      speedY = this.maxSpeed;
+      if (diffY < 0) speedY *= -1;
+    }
 
     this.posX += speedX;
     this.posY += speedY;
