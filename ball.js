@@ -1,6 +1,6 @@
 (function () {
-  Ball = function (ballMesh) {
-    this.ballMesh = ballMesh;
+  Ball = function (mesh) {
+    this.mesh = mesh;
     this.speedX = 0;
     this.speedY = 0;
     this.speedZ = 0;
@@ -35,7 +35,7 @@
     this.speedZ = 0;
     this.inPlay = false;
     this.dead = false;
-    this.ballMesh.position.set(0, 0, -radius);
+    this.mesh.position.set(0, 0, -radius);
     ballMesh.material.color.setHex(0x006600);
     ballMesh.light.color.setHex(0x006600);
   };
@@ -72,9 +72,9 @@
   };
 
   Ball.prototype.updatePos = function () {
-    this.ballMesh.position.x += this.speedX;
-    this.ballMesh.position.y += this.speedY;
-    this.ballMesh.position.z += this.speedZ;
+    this.mesh.position.x += this.speedX;
+    this.mesh.position.y += this.speedY;
+    this.mesh.position.z += this.speedZ;
   };
 
   Ball.prototype.updateSpin = function (oldX, oldY, paddleMesh) {

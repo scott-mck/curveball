@@ -9,7 +9,7 @@
     this.detectCollisions();
 
     this.player.updatePos();
-    this.comp.move(ballMesh);
+    this.comp.move(this.ball);
 
     this.ball.updatePos();
     this.ball.spin();
@@ -26,20 +26,20 @@
 
   Game.prototype.detectCollisionX = function () {
     if (ballMesh.position.x <= leftWallMesh.position.x + radius) {
-      this.ball.ballMesh.position.x = leftWallMesh.position.x + radius;
+      this.ball.mesh.position.x = leftWallMesh.position.x + radius;
       this.ball.speedX *= -1;
     } else if (ballMesh.position.x >= rightWallMesh.position.x - radius) {
-      this.ball.ballMesh.position.x = rightWallMesh.position.x - radius;
+      this.ball.mesh.position.x = rightWallMesh.position.x - radius;
       this.ball.speedX *= -1;
     }
   };
 
   Game.prototype.detectCollisionY = function () {
     if (ballMesh.position.y <= floorMesh.position.y + radius) {
-      this.ball.ballMesh.position.y = floorMesh.position.y + radius;
+      this.ball.mesh.position.y = floorMesh.position.y + radius;
       this.ball.speedY *= -1;
     } else if (ballMesh.position.y >= ceilingMesh.position.y - radius) {
-      this.ball.ballMesh.position.y = ceilingMesh.position.y - radius;
+      this.ball.mesh.position.y = ceilingMesh.position.y - radius;
       this.ball.speedY *= -1;
     }
   };
@@ -47,7 +47,7 @@
   Game.prototype.detectCollisionZ = function () {
     if (ballMesh.position.z < -distance + radius) {
       if (this.checkPaddleCollision(-1)) {
-        this.ball.ballMesh.position.z = -distance + radius;
+        this.ball.mesh.position.z = -distance + radius;
         this.ball.speedZ *= -1;
         this.getCompPaddleSpeed();
       } else {
@@ -55,7 +55,7 @@
       }
     } else if (ballMesh.position.z > -radius) {
       if (this.checkPaddleCollision(1)) {
-        this.ball.ballMesh.position.z = -radius;
+        this.ball.mesh.position.z = -radius;
         this.ball.speedZ *= -1;
         this.getPlayerPaddleSpeed();
       } else {
@@ -81,18 +81,18 @@
   };
 
   Game.prototype.getCompPaddleSpeed = function () {
-    var oldX = this.comp.paddleMesh.position.x;
-    var oldY = this.comp.paddleMesh.position.y;
+    var oldX = this.comp.mesh.position.x;
+    var oldY = this.comp.mesh.position.y;
     setTimeout(function () {
-      this.ball.updateSpin(oldX, oldY, this.comp.paddleMesh);
+      this.ball.updateSpin(oldX, oldY, this.comp.mesh);
     }.bind(this), 0);
   };
 
   Game.prototype.getPlayerPaddleSpeed = function () {
-    var oldX = this.player.paddleMesh.position.x;
-    var oldY = this.player.paddleMesh.position.y;
+    var oldX = this.player.mesh.position.x;
+    var oldY = this.player.mesh.position.y;
     setTimeout(function () {
-      this.ball.updateSpin(oldX, oldY, this.player.paddleMesh);
+      this.ball.updateSpin(oldX, oldY, this.player.mesh);
     }.bind(this), 0);
   };
 

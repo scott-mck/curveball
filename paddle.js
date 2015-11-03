@@ -1,6 +1,6 @@
 (function () {
-  Paddle = function (paddleMesh) {
-    this.paddleMesh = paddleMesh;
+  Paddle = function (mesh) {
+    this.mesh = mesh;
     this.posX = 0;
     this.posY = 0;
     this.speedX = 0;
@@ -39,8 +39,8 @@
   Paddle.prototype.move = function (ball) {
     if (!this.canMove) return;
 
-    var diffX = ball.ballMesh.position.x - this.paddleMesh.position.x;
-    var diffY = ball.ballMesh.position.y - this.paddleMesh.position.y;
+    var diffX = ball.mesh.position.x - this.mesh.position.x;
+    var diffY = ball.mesh.position.y - this.mesh.position.y;
     var speedX = diffX;
     var speedY = diffY;
 
@@ -64,12 +64,12 @@
   Paddle.prototype.resetPos = function () {
     this.posX = 0;
     this.posY = 0;
-    this.paddleMesh.position.x = 0;
-    this.paddleMesh.position.y = 0;
+    this.mesh.position.x = 0;
+    this.mesh.position.y = 0;
   };
 
   Paddle.prototype.updatePos = function () {
-    this.paddleMesh.position.x = this.posX;
-    this.paddleMesh.position.y = this.posY;
+    this.mesh.position.x = this.posX;
+    this.mesh.position.y = this.posY;
   };
 })();
