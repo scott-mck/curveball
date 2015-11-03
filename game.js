@@ -6,7 +6,7 @@
   };
 
   Game.prototype.animate = function () {
-    this.detectCollisions();
+    if (this.ball.inPlay) this.detectCollisions();
 
     this.player.updatePos();
     this.comp.move(this.ball);
