@@ -12,8 +12,8 @@
   }
 
   Ball.prototype.getCollisionPoints = function () {
-    var points = [ballMesh.position.clone()];
-    var ballPos = ballMesh.position.clone();
+    var points = [this.mesh.position.clone()];
+    var ballPos = this.mesh.position.clone();
     var angle = 0;
     for (var i = 0; i < 8; i++) {
       var x = Math.cos(angle);
