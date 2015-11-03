@@ -8,6 +8,7 @@
     this.spinY = 0;
     this.inPlay = false;
     this.dead = false;
+    this.startSpeed = -1;
   }
 
   Ball.prototype.getCollisionPoints = function () {
@@ -54,7 +55,7 @@
   };
 
   Ball.prototype.start = function () {
-    this.speedZ = -.8;
+    this.speedZ = this.startSpeed;
     this.inPlay = true;
     this.dead = false;
   };
