@@ -7,7 +7,7 @@
     this.speedY = 0;
 
     this.canMove = false;
-    this.compMaxSpeed = .2;
+    this.compMaxSpeed = .8;
   };
 
   Paddle.prototype.boundPos = function () {
