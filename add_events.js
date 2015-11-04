@@ -20,5 +20,3 @@ addEvents = function () {
     }
   });
 };
-
-$(document).ready(addEvents);
