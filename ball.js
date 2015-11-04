@@ -28,6 +28,10 @@
     return points;
   };
 
+  Ball.prototype.increaseSpeed = function () {
+    this.startSpeed -= .2;
+  };
+
   Ball.prototype.reset = function () {
     this.spinX = 0;
     this.spinY = 0;
