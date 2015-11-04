@@ -18,6 +18,22 @@
     renderer.render(scene, camera);
   };
 
+  Game.prototype.checkPaddleCollision = function (dir) {
+    if (this.ball.dead) return;
+
+    var points = ball.getCollisionPoints();
+    var vectorDir = new THREE.Vector3();
+    vectorDir.z = 1 * dir;
+    for (var i = 0; i < points.length; i++) {
+      var raycaster = new THREE.Raycaster(points[i], vectorDir);
+      var intersects = raycaster.intersectObjects(scene.children);
+      if (intersects.length > 0) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   Game.prototype.detectCollisions = function () {
     this.detectCollisionX();
     this.detectCollisionY();
@@ -62,22 +78,6 @@
         this.stopPlay();
       }
     }
-  };
-
-  Game.prototype.checkPaddleCollision = function (dir) {
-    if (this.ball.dead) return;
-
-    var points = ball.getCollisionPoints();
-    var vectorDir = new THREE.Vector3();
-    vectorDir.z = 1 * dir;
-    for (var i = 0; i < points.length; i++) {
-      var raycaster = new THREE.Raycaster(points[i], vectorDir);
-      var intersects = raycaster.intersectObjects(scene.children);
-      if (intersects.length > 0) {
-        return true;
-      }
-    }
-    return false;
   };
 
   Game.prototype.getCompPaddleSpeed = function () {
