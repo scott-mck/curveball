@@ -30,14 +30,14 @@
     this.stopPlay();
   };
 
-  Game.prototype.createText = function (text) {
+  Game.prototype.createText = function (text, color) {
     var geom = new THREE.TextGeometry(text, {
       font: 'helvetiker',
       size: 5,
       height: 1
     });
     var mat = new THREE.MeshPhongMaterial({
-      color: 0x00004c,
+      color: color,
       shininess: 20,
       specular: 0x7e7e7e,
       transparent: true
@@ -116,12 +116,12 @@
   };
 
   Game.prototype.gameOver = function () {
-    var textMesh = this.createText('Game Over');
+    var textMesh = this.createText('Game Over', 0x990000);
     textMesh.geometry.computeBoundingBox();
     var width = textMesh.geometry.boundingBox.max.x - textMesh.geometry.boundingBox.min.x;
     textMesh.position.set(-width / 2, 10, -10);
     scene.add(textMesh);
-    // this.fadeInText(textMesh);
+    this.ball.stop();
   };
 
   Game.prototype.getCompPaddleSpeed = function () {
@@ -179,7 +179,7 @@
 
   Game.prototype.showNextLevel = function () {
     this.level += 1;
-    var textMesh = this.createText('Level ' + this.level);
+    var textMesh = this.createText('Level ' + this.level, 0x00004c);
     textMesh.geometry.computeBoundingBox();
     var width = textMesh.geometry.boundingBox.max.x - textMesh.geometry.boundingBox.min.x;
     textMesh.position.set(-width / 2, 10, -100);
