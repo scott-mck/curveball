@@ -31,7 +31,7 @@
   };
 
   Game.prototype.createText = function (text) {
-    var geom = new THREE.TextGeometry('Level ' + text, {
+    var geom = new THREE.TextGeometry(text, {
       font: 'helvetiker',
       size: 5,
       height: 1
@@ -115,6 +115,15 @@
     }
   };
 
+  Game.prototype.gameOver = function () {
+    var textMesh = this.createText('Game Over');
+    textMesh.geometry.computeBoundingBox();
+    var width = textMesh.geometry.boundingBox.max.x - textMesh.geometry.boundingBox.min.x;
+    textMesh.position.set(-width / 2, 10, -10);
+    scene.add(textMesh);
+    // this.fadeInText(textMesh);
+  };
+
   Game.prototype.getCompPaddleSpeed = function () {
     var oldX = this.comp.mesh.position.x;
     var oldY = this.comp.mesh.position.y;
@@ -144,14 +153,33 @@
     renderer.render(scene, camera);
   };
 
+  Game.prototype.playNextLevel = function () {
+    this.showNextLevel();
+    this.ball.increaseSpeed();
+    this.comp.increaseMaxSpeed();
+  };
+
   Game.prototype.playerWin = function () {
     this.playerCount += 1;
     this.stopPlay();
   };
 
+  Game.prototype.reset = function () {
+    this.ball.reset();
+    this.comp.resetPos();
+    if (this.playerCount >= 3) {
+      this.playerCount = 0;
+      this.playNextLevel();
+    }
+
+    if (this.compCount >= 4) {
+      this.gameOver();
+    }
+  };
+
   Game.prototype.showNextLevel = function () {
     this.level += 1;
-    var textMesh = this.createText(this.level);
+    var textMesh = this.createText('Level ' + this.level);
     textMesh.geometry.computeBoundingBox();
     var width = textMesh.geometry.boundingBox.max.x - textMesh.geometry.boundingBox.min.x;
     textMesh.position.set(-width / 2, 10, -100);
@@ -168,11 +196,7 @@
     this.ball.stop();
     this.comp.canMove = false;
     setTimeout(function () {
-      this.ball.reset();
-      this.comp.resetPos();
-      if (this.playerCount >= 3) {
-        this.showNextLevel();
-      }
+      this.reset();
     }.bind(this), 1000);
   };
 })();
