@@ -3,6 +3,10 @@
     this.ball = ball;
     this.player = player;
     this.comp = comp;
+
+    this.level = 0;
+    this.playerCount = 0;
+    this.compCount = 0;
   };
 
   Game.prototype.checkPaddleCollision = function (dir) {
@@ -19,6 +23,11 @@
       }
     }
     return false;
+  };
+
+  Game.prototype.compWin = function () {
+    this.compCount += 1;
+    this.stopPlay();
   };
 
   Game.prototype.createText = function (text) {
@@ -69,7 +78,7 @@
         this.ball.speedZ *= -1;
         this.getCompPaddleSpeed();
       } else {
-        this.stopPlay();
+        this.playerWin();
       }
     } else if (ballMesh.position.z > -radius) {
       if (this.checkPaddleCollision(1)) {
@@ -77,7 +86,7 @@
         this.ball.speedZ *= -1;
         this.getPlayerPaddleSpeed();
       } else {
-        this.stopPlay();
+        this.compWin();
       }
     }
   };
@@ -102,6 +111,7 @@
 
     if (textMesh.material.opacity <= 0) {
       cancelAnimationFrame(id);
+      scene.remove(textMesh);
     }
   };
 
@@ -134,8 +144,14 @@
     renderer.render(scene, camera);
   };
 
-  Game.prototype.showLevel = function (level) {
-    var textMesh = this.createText(level);
+  Game.prototype.playerWin = function () {
+    this.playerCount += 1;
+    this.stopPlay();
+  };
+
+  Game.prototype.showNextLevel = function () {
+    this.level += 1;
+    var textMesh = this.createText(this.level);
     textMesh.geometry.computeBoundingBox();
     var width = textMesh.geometry.boundingBox.max.x - textMesh.geometry.boundingBox.min.x;
     textMesh.position.set(-width / 2, 10, -100);
@@ -154,6 +170,9 @@
     setTimeout(function () {
       this.ball.reset();
       this.comp.resetPos();
+      if (this.playerCount >= 3) {
+        this.showNextLevel();
+      }
     }.bind(this), 1000);
   };
 })();
