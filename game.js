@@ -5,19 +5,6 @@
     this.comp = comp;
   };
 
-  Game.prototype.animate = function () {
-    if (this.ball.inPlay) this.detectCollisions();
-
-    this.player.updatePos();
-    this.comp.move(this.ball);
-
-    this.ball.updatePos();
-    this.ball.spin();
-
-    requestAnimationFrame(this.animate.bind(this));
-    renderer.render(scene, camera);
-  };
-
   Game.prototype.checkPaddleCollision = function (dir) {
     if (this.ball.dead) return;
 
@@ -32,6 +19,21 @@
       }
     }
     return false;
+  };
+
+  Game.prototype.createText = function (text) {
+    var geom = new THREE.TextGeometry('Level ' + text, {
+      font: 'helvetiker',
+      size: 5,
+      height: 1
+    });
+    var mat = new THREE.MeshPhongMaterial({
+      color: 0x00004c,
+      shininess: 20,
+      specular: 0x7e7e7e,
+      transparent: true
+    });
+    return new THREE.Mesh(geom, mat);
   };
 
   Game.prototype.detectCollisions = function () {
@@ -80,6 +82,29 @@
     }
   };
 
+  Game.prototype.fadeInText = function (textMesh) {
+    var id = requestAnimationFrame(this.fadeInText.bind(this, textMesh));
+    textMesh.position.z += 3;
+    renderer.render(scene, camera);
+
+    if (textMesh.position.z >= 0) {
+      cancelAnimationFrame(id);
+      setTimeout(function () {
+        this.fadeOutText(textMesh);
+      }.bind(this), 600);
+    }
+  };
+
+  Game.prototype.fadeOutText = function (textMesh) {
+    var id = requestAnimationFrame(this.fadeOutText.bind(this, textMesh));
+    textMesh.material.opacity -= .02;
+    renderer.render(scene, camera);
+
+    if (textMesh.material.opacity <= 0) {
+      cancelAnimationFrame(id);
+    }
+  };
+
   Game.prototype.getCompPaddleSpeed = function () {
     var oldX = this.comp.mesh.position.x;
     var oldY = this.comp.mesh.position.y;
@@ -94,6 +119,28 @@
     setTimeout(function () {
       this.ball.updateSpin(oldX, oldY, this.player.mesh);
     }.bind(this), 0);
+  };
+
+  Game.prototype.play = function () {
+    if (this.ball.inPlay) this.detectCollisions();
+
+    this.player.updatePos();
+    this.comp.move(this.ball);
+
+    this.ball.updatePos();
+    this.ball.spin();
+
+    requestAnimationFrame(this.play.bind(this));
+    renderer.render(scene, camera);
+  };
+
+  Game.prototype.showLevel = function (level) {
+    var textMesh = this.createText(level);
+    textMesh.geometry.computeBoundingBox();
+    var width = textMesh.geometry.boundingBox.max.x - textMesh.geometry.boundingBox.min.x;
+    textMesh.position.set(-width / 2, 10, -100);
+    scene.add(textMesh);
+    this.fadeInText(textMesh);
   };
 
   Game.prototype.startPlay = function () {
