@@ -4,7 +4,6 @@
     <title>Curveball</title>
     <script type="application/javascript" src="jquery-2.1.4.min.js"></script>
 		<script type="application/javascript" src="three.min.js"></script>
-		<script type="application/javascript" src="gentilis_regular.typeface.js"></script>
 		<script type="application/javascript" src="helvetiker_regular.typeface.js"></script>
 		<script type="application/javascript" src="init.js"></script>
 		<script type="application/javascript" src="add_events.js"></script>
@@ -33,7 +32,7 @@
       addEvents();
 
       var game = new Game(ball, player, comp);
-      game.showLevel(1);
+      game.showNextLevel();
       game.play();
     </script>
   </body>
