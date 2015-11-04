@@ -16,8 +16,8 @@ init = function () {
   var ambient = new THREE.AmbientLight(0x404040);
   scene.add(ambient);
 
-  var light = new THREE.PointLight(0xffffff, 1, 150);
-  light.position.set(10, 8, 5);
+  var light = new THREE.PointLight(0xffffff, 1, 200);
+  light.position.set(10, 8, 30);
   scene.add(light);
 
   ////////////// BALL
