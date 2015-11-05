@@ -45,7 +45,7 @@ init = function () {
     color: 0xa8a8a8,
     specular: 0x444444,
     shading: THREE.SmoothShading,
-    shininess: 90,
+    shininess: 90
   });
 
   leftWallMesh = new THREE.Mesh(sideGeometry.clone(), wallMaterial.clone());
