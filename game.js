@@ -93,10 +93,10 @@
 
   Game.prototype.fadeInText = function (textMesh) {
     var id = requestAnimationFrame(this.fadeInText.bind(this, textMesh));
-    textMesh.position.z += 3;
+    textMesh.material.opacity += .02;
     renderer.render(scene, camera);
 
-    if (textMesh.position.z >= 0) {
+    if (textMesh.material.opacity >= 1) {
       cancelAnimationFrame(id);
       setTimeout(function () {
         this.fadeOutText(textMesh);
@@ -180,9 +180,10 @@
   Game.prototype.showNextLevel = function () {
     this.level += 1;
     var textMesh = this.createText('Level ' + this.level, 0x00004c);
+    textMesh.material.opacity = 0;
     textMesh.geometry.computeBoundingBox();
     var width = textMesh.geometry.boundingBox.max.x - textMesh.geometry.boundingBox.min.x;
-    textMesh.position.set(-width / 2, 10, -100);
+    textMesh.position.set(-width / 2, 10, -10);
     scene.add(textMesh);
     this.fadeInText(textMesh);
   };
