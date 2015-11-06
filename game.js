@@ -152,6 +152,10 @@
   Game.prototype.play = function () {
     if (this.ball.inPlay) this.detectCollisions();
 
+    for (var i = 0; i < hearts.length; i++) {
+      hearts[i].rotation.y -= .02;
+    }
+
     this.player.updatePos();
     this.comp.move(this.ball);
 
