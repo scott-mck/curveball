@@ -33,7 +33,7 @@
   Game.prototype.createText = function (text, color) {
     var geom = new THREE.TextGeometry(text, {
       font: 'optimer',
-      size: 5,
+      size: 4,
       height: 1
     });
     var mat = new THREE.MeshPhongMaterial({
@@ -119,7 +119,7 @@
     textMesh.position.setX(-width / 2);
     renderer.render(scene, camera);
 
-    if (textMesh.position.y >= 19) {
+    if (textMesh.position.y >= 14) {
       cancelAnimationFrame(id);
     }
   };
@@ -153,7 +153,7 @@
     if (this.ball.inPlay) this.detectCollisions();
 
     for (var i = 0; i < hearts.length; i++) {
-      hearts[i].rotation.y -= .02;
+      hearts[i].rotation.y -= .01;
     }
 
     this.player.updatePos();
@@ -203,7 +203,7 @@
     this.levelText.material.opacity = 0;
     this.levelText.geometry.computeBoundingBox();
     var width = this.levelText.geometry.boundingBox.max.x - this.levelText.geometry.boundingBox.min.x;
-    this.levelText.position.set(-width / 2, 10, -10);
+    this.levelText.position.set(-width / 2, 10, 0);
     scene.add(this.levelText);
     this.fadeInText(this.levelText);
   };
