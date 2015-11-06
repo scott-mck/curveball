@@ -94,4 +94,38 @@ init = function () {
   ball = new Ball(ballMesh);
   player = new Paddle(playerMesh);
   comp = new Paddle(compMesh);
+
+  ////////////// CREATE HEART
+  var heartMat = new THREE.MeshPhongMaterial({
+    color: 0xff0000,
+    specular: 0xffffff,
+    shininess: 40
+  });
+
+  var heartShape = new THREE.Shape();
+  var size = 2;
+  var x = 0; var y = 0; // point 1
+  var x2 = 0; var y2 = -size / 1.3; // point 3
+  heartShape.moveTo(x, y);
+  heartShape.bezierCurveTo(x + size / 2, y + size, x + size, y2 / 2, x2, y2);
+  heartShape.bezierCurveTo(x - size, y2 / 2, x - size / 2, y + size, x, y);
+
+  var heartGeom = new THREE.ExtrudeGeometry(heartShape, {
+    amount: .2,
+    curveSegments: 50,
+    bevelEnabled: true,
+    bevelSegments: 20,
+    steps: 2,
+    bevelSize: .5,
+    bevelThickness: .25
+  });
+
+  hearts = [];
+  for (var i = 0; i < lives; i++) {
+    var heartMesh = new THREE.Mesh(heartGeom.clone(), heartMat.clone());
+    heartMesh.position.x = 10 + i * 4;
+    heartMesh.position.y += 18;
+    scene.add(heartMesh);
+    hearts.push(heartMesh);
+  }
 };
