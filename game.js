@@ -32,7 +32,7 @@
 
   Game.prototype.createText = function (text, color) {
     var geom = new THREE.TextGeometry(text, {
-      font: 'helvetiker',
+      font: 'optimer',
       size: 5,
       height: 1
     });
