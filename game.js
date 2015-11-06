@@ -106,12 +106,21 @@
 
   Game.prototype.fadeOutText = function (textMesh) {
     var id = requestAnimationFrame(this.fadeOutText.bind(this, textMesh));
-    textMesh.material.opacity -= .02;
+    textMesh.position.y += .5;
+    textMesh.position.z += .3;
+    textMesh.scale.set(
+      textMesh.scale.x * .97,
+      textMesh.scale.y * .97,
+      textMesh.scale.z * .97
+    );
+    textMesh.geometry.boundingBox.min.x *= .97;
+    textMesh.geometry.boundingBox.max.x *= .97;
+    var width = textMesh.geometry.boundingBox.max.x - textMesh.geometry.boundingBox.min.x;
+    textMesh.position.setX(-width / 2);
     renderer.render(scene, camera);
 
-    if (textMesh.material.opacity <= 0) {
+    if (textMesh.position.y >= 19) {
       cancelAnimationFrame(id);
-      scene.remove(textMesh);
     }
   };
 
@@ -119,7 +128,7 @@
     var textMesh = this.createText('Game Over', 0x990000);
     textMesh.geometry.computeBoundingBox();
     var width = textMesh.geometry.boundingBox.max.x - textMesh.geometry.boundingBox.min.x;
-    textMesh.position.set(-width / 2, 10, -10);
+    textMesh.position.set(-width / 2, 10, 10);
     scene.add(textMesh);
     this.ball.stop();
   };
@@ -164,6 +173,11 @@
     this.stopPlay();
   };
 
+  Game.prototype.removeLevelText = function () {
+    scene.remove(this.levelText);
+    this.levelText = undefined;
+  };
+
   Game.prototype.reset = function () {
     this.ball.reset();
     this.comp.resetPos();
@@ -178,14 +192,16 @@
   };
 
   Game.prototype.showNextLevel = function () {
+    this.removeLevelText();
     this.level += 1;
-    var textMesh = this.createText('Level ' + this.level, 0x00004c);
-    textMesh.material.opacity = 0;
-    textMesh.geometry.computeBoundingBox();
-    var width = textMesh.geometry.boundingBox.max.x - textMesh.geometry.boundingBox.min.x;
-    textMesh.position.set(-width / 2, 10, -10);
-    scene.add(textMesh);
-    this.fadeInText(textMesh);
+
+    this.levelText = this.createText('Level ' + this.level, 0x00004c);
+    this.levelText.material.opacity = 0;
+    this.levelText.geometry.computeBoundingBox();
+    var width = this.levelText.geometry.boundingBox.max.x - this.levelText.geometry.boundingBox.min.x;
+    this.levelText.position.set(-width / 2, 10, -10);
+    scene.add(this.levelText);
+    this.fadeInText(this.levelText);
   };
 
   Game.prototype.startPlay = function () {
