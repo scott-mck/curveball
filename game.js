@@ -91,46 +91,47 @@
     }
   };
 
-  Game.prototype.fadeInText = function (textMesh) {
-    var id = requestAnimationFrame(this.fadeInText.bind(this, textMesh));
-    textMesh.material.opacity += .02;
+  Game.prototype.fadeInText = function (levelText, callback) {
+    var id = requestAnimationFrame(this.fadeInText.bind(this, levelText, callback));
+    levelText.material.opacity += .02;
     renderer.render(scene, camera);
 
-    if (textMesh.material.opacity >= 1) {
+    if (levelText.material.opacity >= 1) {
       cancelAnimationFrame(id);
+      callback && callback();
       setTimeout(function () {
-        this.fadeOutText(textMesh);
-        this.rotateHearts();
+        this.moveTextToHeader(levelText);
       }.bind(this), 600);
     }
   };
 
-  Game.prototype.fadeOutText = function (textMesh) {
-    var id = requestAnimationFrame(this.fadeOutText.bind(this, textMesh));
-    textMesh.position.y += .5;
-    textMesh.position.z += .3;
-    textMesh.scale.set(
-      textMesh.scale.x * .97,
-      textMesh.scale.y * .97,
-      textMesh.scale.z * .97
+  Game.prototype.moveTextToHeader = function (levelText, callback) {
+    var id = requestAnimationFrame(this.moveTextToHeader.bind(this, levelText, callback));
+    levelText.position.y += .5;
+    levelText.position.z += .3;
+    levelText.scale.set(
+      levelText.scale.x * .97,
+      levelText.scale.y * .97,
+      levelText.scale.z * .97
     );
-    textMesh.geometry.boundingBox.min.x *= .97;
-    textMesh.geometry.boundingBox.max.x *= .97;
-    var width = textMesh.geometry.boundingBox.max.x - textMesh.geometry.boundingBox.min.x;
-    textMesh.position.setX(-width / 2);
+    levelText.geometry.boundingBox.min.x *= .97;
+    levelText.geometry.boundingBox.max.x *= .97;
+    var width = levelText.geometry.boundingBox.max.x - levelText.geometry.boundingBox.min.x;
+    levelText.position.setX(-width / 2);
     renderer.render(scene, camera);
 
-    if (textMesh.position.y >= 14) {
+    if (levelText.position.y >= 14) {
       cancelAnimationFrame(id);
+      callback && callback();
     }
   };
 
   Game.prototype.gameOver = function () {
-    var textMesh = this.createText('Game Over', 0x990000);
-    textMesh.geometry.computeBoundingBox();
-    var width = textMesh.geometry.boundingBox.max.x - textMesh.geometry.boundingBox.min.x;
-    textMesh.position.set(-width / 2, 10, 10);
-    scene.add(textMesh);
+    var levelText = this.createText('Game Over', 0x990000);
+    levelText.geometry.computeBoundingBox();
+    var width = levelText.geometry.boundingBox.max.x - levelText.geometry.boundingBox.min.x;
+    levelText.position.set(-width / 2, 10, 10);
+    scene.add(levelText);
     this.ball.stop();
   };
 
@@ -174,11 +175,6 @@
     this.stopPlay();
   };
 
-  Game.prototype.removeLevelText = function () {
-    scene.remove(this.levelText);
-    this.levelText = undefined;
-  };
-
   Game.prototype.reset = function () {
     this.ball.reset();
     this.comp.resetPos();
@@ -208,16 +204,21 @@
   };
 
   Game.prototype.showNextLevel = function () {
-    this.removeLevelText();
     this.level += 1;
 
+    scene.remove(this.levelText);
     this.levelText = this.createText('Level ' + this.level, 0x00004c);
     this.levelText.material.opacity = 0;
     this.levelText.geometry.computeBoundingBox();
     var width = this.levelText.geometry.boundingBox.max.x - this.levelText.geometry.boundingBox.min.x;
     this.levelText.position.set(-width / 2, 10, 0);
     scene.add(this.levelText);
-    this.fadeInText(this.levelText);
+    var completionCallback = function () {
+      setTimeout(function () {
+        this.rotateHearts();
+      }.bind(this), 600);
+    };
+    this.fadeInText(this.levelText, completionCallback.bind(this));
   };
 
   Game.prototype.startPlay = function () {
