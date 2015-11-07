@@ -98,33 +98,37 @@ init = function () {
   ////////////// CREATE HEART
   var heartMat = new THREE.MeshPhongMaterial({
     color: 0xff0000,
-    specular: 0xffffff,
+    specular: 0x696969,
     shininess: 40
   });
 
-  var heartShape = new THREE.Shape();
-  var size = 2;
-  var x = 0; var y = 0; // point 1
-  var x2 = 0; var y2 = -size / 1.3; // point 3
-  heartShape.moveTo(x, y);
-  heartShape.bezierCurveTo(x + size / 2, y + size, x + size, y2 / 2, x2, y2);
-  heartShape.bezierCurveTo(x - size, y2 / 2, x - size / 2, y + size, x, y);
+  // heartShape = new THREE.Shape();
+  // var size = 8;
+  // var x = 0; var y = 0; // point 1
+  // var x2 = 0; var y2 = -size / 2; // point 3
+  // heartShape.moveTo(x, y);
+  // heartShape.bezierCurveTo(x + size / 2, y + size / 2, x + (size / 1.3), y2 / 2, x2, y2);
+  // heartShape.bezierCurveTo(x - (size / 1.3), y2 / 2, x - size / 2, y + size / 2, x, y);
 
-  var heartGeom = new THREE.ExtrudeGeometry(heartShape, {
-    amount: .2,
-    curveSegments: 50,
-    bevelEnabled: true,
-    bevelSegments: 20,
-    steps: 2,
-    bevelSize: .5,
-    bevelThickness: .25
-  });
+  // heartGeom = new THREE.ExtrudeGeometry(heartShape, {
+  //   amount: .1,
+  //   // curveSegments: 50,
+  //   // bevelEnabled: true,
+  //   // bevelSegments: 20,
+  //   // steps: 2,
+  //   // bevelSize: .5,
+  //   // bevelThickness: .4,
+  // extrudePath: extrude
+  // });
+
 
   hearts = [];
   for (var i = 0; i < lives; i++) {
-    var heartMesh = new THREE.Mesh(heartGeom.clone(), heartMat.clone());
-    heartMesh.position.x = 10 + i * 4;
-    heartMesh.position.y += 18;
+    var heartMesh = new THREE.Mesh(new THREE.HeartGeometry({ points_per_layer: 41 }), heartMat.clone());
+    heartMesh.rotation.y = Math.PI / 2;
+    heartMesh.position.x = 12 + i * 3.5;
+    heartMesh.position.y += 17;
+    heartMesh.scale.set(1.3, 1.3, 1.3);
     scene.add(heartMesh);
     hearts.push(heartMesh);
   }
