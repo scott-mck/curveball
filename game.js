@@ -100,6 +100,7 @@
       cancelAnimationFrame(id);
       setTimeout(function () {
         this.fadeOutText(textMesh);
+        this.rotateHearts();
       }.bind(this), 600);
     }
   };
@@ -152,10 +153,6 @@
   Game.prototype.play = function () {
     if (this.ball.inPlay) this.detectCollisions();
 
-    for (var i = 0; i < hearts.length; i++) {
-      hearts[i].rotation.y -= .01;
-    }
-
     this.player.updatePos();
     this.comp.move(this.ball);
 
@@ -192,6 +189,21 @@
 
     if (this.compCount >= 4) {
       this.gameOver();
+    }
+  };
+
+  Game.prototype.rotateHearts = function () {
+    var id = requestAnimationFrame(this.rotateHearts.bind(this));
+    for (var i = 0; i < lives; i++) {
+      hearts[i].rotation.y += .1;
+    }
+    renderer.render(scene, camera);
+
+    if (hearts[0].rotation.y >= (Math.PI * 2) + Math.PI / 2) {
+      cancelAnimationFrame(id);
+      for (var i = 0; i < lives; i++) {
+        hearts[i].rotation.y = Math.PI / 2;
+      }
     }
   };
 
