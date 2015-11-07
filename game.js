@@ -92,7 +92,9 @@
   };
 
   Game.prototype.fadeInText = function (levelText, callback) {
-    var id = requestAnimationFrame(this.fadeInText.bind(this, levelText, callback));
+    var id = requestAnimationFrame(function () {
+      this.fadeInText(levelText, callback);
+    }.bind(this));
     levelText.material.opacity += .02;
     renderer.render(scene, camera);
 
@@ -106,7 +108,9 @@
   };
 
   Game.prototype.moveTextToHeader = function (levelText, callback) {
-    var id = requestAnimationFrame(this.moveTextToHeader.bind(this, levelText, callback));
+    var id = requestAnimationFrame(function () {
+      this.moveTextToHeader(levelText, callback);
+    }.bind(this));
     levelText.position.y += .5;
     levelText.position.z += .3;
     levelText.scale.set(
