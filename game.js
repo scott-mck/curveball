@@ -175,6 +175,7 @@
   };
 
   Game.prototype.gameOver = function () {
+    this.showCursor();
     scene.remove(this.levelText);
     this.ball.stop();
 
@@ -184,9 +185,7 @@
     this.levelText.position.set(-width / 2, 10, 0);
     scene.add(this.levelText);
 
-    gameOverButton = this.createGameOverButton();
-    gameOverButton.position.y = -15;
-    scene.add(gameOverButton);
+    this.showGameOverButton();
   };
 
   Game.prototype.getCompPaddleSpeed = function () {
@@ -203,6 +202,11 @@
     setTimeout(function () {
       this.ball.updateSpin(oldX, oldY, this.player.mesh);
     }.bind(this), 0);
+  };
+
+  Game.prototype.hideCursor = function () {
+    this.player.canMove = true;
+    $('#canvas').css('cursor', 'none');
   };
 
   Game.prototype.moveTextToHeader = function (levelText, callback) {
@@ -248,6 +252,7 @@
     this.wins = 0;
     this.losses = 0;
     this.reset();
+    this.hideCursor();
     this.showNextLevel();
   };
 
@@ -297,7 +302,7 @@
       this.playNextLevel();
     }
 
-    if (this.losses >= 1) {
+    if (this.losses >= lives) {
       this.gameOver();
     }
   };
@@ -317,6 +322,24 @@
         hearts[i].rotation.y = Math.PI / 2;
       }
     }
+  };
+
+  Game.prototype.showCursor = function () {
+    this.player.canMove = false;
+    $('#canvas').css('cursor', 'default');
+  };
+
+  Game.prototype.showGameOverButton = function () {
+    var gameOverButton = this.createGameOverButton();
+    gameOverButton.position.y = -40;
+    scene.add(gameOverButton);
+    function animateGameOverButton () {
+      var id = requestAnimationFrame(animateGameOverButton.bind(this));
+      gameOverButton.position.y += .5;
+      renderer.render(scene, camera);
+      if (gameOverButton.position.y >= -15) cancelAnimationFrame(id);
+    }
+    animateGameOverButton();
   };
 
   Game.prototype.showNextLevel = function () {
