@@ -26,7 +26,7 @@
 
   Paddle.prototype.getMousePos = function (event) {
     if (!this.canMove) return;
-    
+
     var canvasBox = renderer.domElement.getBoundingClientRect();
     var canvasMouseX = event.clientX - canvasBox.left;
     var canvasMouseY = event.clientY - canvasBox.top;
@@ -41,7 +41,6 @@
   Paddle.prototype.increaseMaxSpeed = function () {
     this.compMaxSpeed += .1;
   };
-
 
   Paddle.prototype.move = function (ball) {
     if (!this.canMove) return;
