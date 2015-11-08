@@ -130,7 +130,7 @@
     var levelText = this.createText('Game Over', 0x990000);
     levelText.geometry.computeBoundingBox();
     var width = levelText.geometry.boundingBox.max.x - levelText.geometry.boundingBox.min.x;
-    levelText.position.set(-width / 2, 10, 10);
+    levelText.position.set(-width / 2, 10, 0);
     scene.add(levelText);
     this.ball.stop();
   };
@@ -208,7 +208,7 @@
       this.playNextLevel();
     }
 
-    if (this.losses >= 4) {
+    if (this.losses >= lives) {
       this.gameOver();
     }
   };
