@@ -1,5 +1,5 @@
 addEvents = function () {
-  $('#canvas').css('cursor', 'none');
+  game.hideCursor();
 
   $(document).on('mousemove', function (event) {
     player.getMousePos(event);
