@@ -127,11 +127,11 @@
 
   Game.prototype.gameOver = function () {
     scene.remove(this.levelText);
-    var levelText = this.createText('Game Over', 0x990000);
-    levelText.geometry.computeBoundingBox();
-    var width = levelText.geometry.boundingBox.max.x - levelText.geometry.boundingBox.min.x;
-    levelText.position.set(-width / 2, 10, 0);
-    scene.add(levelText);
+    this.levelText = this.createText('Game Over', 0x990000);
+    this.levelText.geometry.computeBoundingBox();
+    var width = this.levelText.geometry.boundingBox.max.x - this.levelText.geometry.boundingBox.min.x;
+    this.levelText.position.set(-width / 2, 10, 0);
+    scene.add(this.levelText);
     this.ball.stop();
   };
 
@@ -152,6 +152,8 @@
   };
 
   Game.prototype.play = function () {
+    requestAnimationFrame(this.play.bind(this));
+
     if (this.ball.inPlay) this.detectCollisions();
 
     this.player.updatePos();
@@ -160,8 +162,16 @@
     this.ball.updatePos();
     this.ball.spin();
 
-    requestAnimationFrame(this.play.bind(this));
     renderer.render(scene, camera);
+  };
+
+  Game.prototype.playAgain = function () {
+    addAllHearts();
+    this.level = 0;
+    this.wins = 0;
+    this.losses = 0;
+    this.reset();
+    this.showNextLevel();
   };
 
   Game.prototype.playNextLevel = function () {
