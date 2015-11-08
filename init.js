@@ -1,4 +1,17 @@
-init = function () {
+function init () {
+  setScene();
+  addLight();
+  createBall();
+  addWalls();
+  createPaddles();
+  addAllHearts();
+
+  ball = new Ball(ballMesh);
+  player = new Paddle(playerMesh);
+  comp = new Paddle(compMesh);
+};
+
+function setScene () {
   canvasWidth = $('#canvas').width();
   canvasHeight = $('#canvas').height();
   var container = document.getElementById('canvas');
@@ -11,16 +24,18 @@ init = function () {
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(70, canvasWidth / canvasHeight, 1, 1000);
   camera.position.z = 30;
+}
 
-  ////////////// LIGHT
+function addLight () {
   var ambient = new THREE.AmbientLight(0x404040);
   scene.add(ambient);
 
   var light = new THREE.PointLight(0xffffff, 1, 200);
   light.position.set(10, 8, 30);
   scene.add(light);
+}
 
-  ////////////// BALL
+function createBall() {
   var geom = new THREE.SphereGeometry(radius, 20, 20);
   var mat = new THREE.MeshPhongMaterial({
     color: 0x006600,
@@ -36,8 +51,9 @@ init = function () {
   ballMesh.add(light);
   ballMesh.light = light;
   scene.add(ballMesh);
+}
 
-  ////////////// WALLS
+function addWalls () {
   var backGeometry = new THREE.BoxGeometry(wallWidth, wallHeight, wallDepth);
   var sideGeometry = new THREE.BoxGeometry(distance, wallHeight, wallDepth);
   var floorGeometry = new THREE.BoxGeometry(distance, wallWidth, wallDepth);
@@ -73,8 +89,9 @@ init = function () {
   ceilingMesh.position.y += wallHeight / 2;
   ceilingMesh.position.z = -distance / 2;
   scene.add(ceilingMesh);
+}
 
-  ////////////// PADDLES
+function createPaddles () {
   var geom = new THREE.BoxGeometry(paddleWidth, paddleHeight, .1);
   var mat = new THREE.MeshBasicMaterial({
     color: 0x0000cc,
@@ -89,42 +106,17 @@ init = function () {
   compMesh = new THREE.Mesh(geom.clone(), mat.clone());
   compMesh.position.z = -distance;
   scene.add(compMesh);
+}
 
-  ////////////// CREATE BALL AND PADDLES
-  ball = new Ball(ballMesh);
-  player = new Paddle(playerMesh);
-  comp = new Paddle(compMesh);
-
-  ////////////// CREATE HEART
+function addAllHearts() {
+  var heartGeom = new THREE.HeartGeometry({ points_per_layer: 41 });
   var heartMat = new THREE.MeshPhongMaterial({
     color: 0xff0000,
     specular: 0x696969,
     shininess: 40
   });
-
-  // heartShape = new THREE.Shape();
-  // var size = 8;
-  // var x = 0; var y = 0; // point 1
-  // var x2 = 0; var y2 = -size / 2; // point 3
-  // heartShape.moveTo(x, y);
-  // heartShape.bezierCurveTo(x + size / 2, y + size / 2, x + (size / 1.3), y2 / 2, x2, y2);
-  // heartShape.bezierCurveTo(x - (size / 1.3), y2 / 2, x - size / 2, y + size / 2, x, y);
-
-  // heartGeom = new THREE.ExtrudeGeometry(heartShape, {
-  //   amount: .1,
-  //   // curveSegments: 50,
-  //   // bevelEnabled: true,
-  //   // bevelSegments: 20,
-  //   // steps: 2,
-  //   // bevelSize: .5,
-  //   // bevelThickness: .4,
-  // extrudePath: extrude
-  // });
-
-
-  hearts = [];
   for (var i = 0; i < lives - 1; i++) {
-    var heartMesh = new THREE.Mesh(new THREE.HeartGeometry({ points_per_layer: 41 }), heartMat.clone());
+    var heartMesh = new THREE.Mesh(heartGeom.clone(), heartMat.clone());
     heartMesh.rotation.y = Math.PI / 2;
     heartMesh.position.x = 12 + i * 3.5;
     heartMesh.position.y += 17;
@@ -132,4 +124,4 @@ init = function () {
     scene.add(heartMesh);
     hearts.push(heartMesh);
   }
-};
+}
