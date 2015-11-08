@@ -6,7 +6,7 @@
     this.speedX = 0;
     this.speedY = 0;
 
-    this.canMove = false;
+    this.canMove = true;
     this.compMaxSpeed = .3;
   };
 
@@ -25,6 +25,8 @@
   };
 
   Paddle.prototype.getMousePos = function (event) {
+    if (!this.canMove) return;
+    
     var canvasBox = renderer.domElement.getBoundingClientRect();
     var canvasMouseX = event.clientX - canvasBox.left;
     var canvasMouseY = event.clientY - canvasBox.top;
