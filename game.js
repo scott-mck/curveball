@@ -25,11 +25,6 @@
     return false;
   };
 
-  Game.prototype.compWin = function () {
-    this.compCount += 1;
-    this.stopPlay();
-  };
-
   Game.prototype.createText = function (text, color) {
     var geom = new THREE.TextGeometry(text, {
       font: 'optimer',
@@ -86,7 +81,7 @@
         this.ball.speedZ *= -1;
         this.getPlayerPaddleSpeed();
       } else {
-        this.compWin();
+        this.playerLose();
       }
     }
   };
@@ -172,6 +167,11 @@
     this.showNextLevel();
     this.ball.increaseSpeed();
     this.comp.increaseMaxSpeed();
+  };
+
+  Game.prototype.playerLose = function () {
+    this.compCount += 1;
+    this.stopPlay();
   };
 
   Game.prototype.playerWin = function () {
