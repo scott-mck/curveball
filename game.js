@@ -110,6 +110,9 @@
     this.levelText.position.set(-width / 2, 10, 0);
     scene.add(this.levelText);
     this.ball.stop();
+    setTimeout(function () {
+      showPlayAgainModal();
+    }, 1000);
   };
 
   Game.prototype.getCompPaddleSpeed = function () {
