@@ -75,7 +75,7 @@
   Game.prototype.createGameOverButtonInside = function () {
     var buttonGeom = this.createGameOverButtonGeometry();
     var insideMat = new THREE.MeshPhongMaterial({
-      color: 0xff0000,
+      color: 0xcc0000,
       shininess: 50
     });
     var inside = new THREE.Mesh(buttonGeom.clone(), insideMat);
@@ -86,9 +86,8 @@
   Game.prototype.createGameOverButtonOutside = function () {
     var buttonGeom = this.createGameOverButtonGeometry();
     var outsideMat = new THREE.MeshPhongMaterial({
-      color: 0xffffff,
+      color: 0x3f3f3f,
       shininess: 100,
-      specular: 0x000000,
       transparent: true,
       opacity: .4
     });
@@ -177,12 +176,17 @@
 
   Game.prototype.gameOver = function () {
     scene.remove(this.levelText);
+    this.ball.stop();
+
     this.levelText = this.createText('Game Over', 0x990000);
     this.levelText.geometry.computeBoundingBox();
     var width = this.levelText.geometry.boundingBox.max.x - this.levelText.geometry.boundingBox.min.x;
     this.levelText.position.set(-width / 2, 10, 0);
     scene.add(this.levelText);
-    this.ball.stop();
+
+    gameOverButton = this.createGameOverButton();
+    gameOverButton.position.y = -15;
+    scene.add(gameOverButton);
   };
 
   Game.prototype.getCompPaddleSpeed = function () {
@@ -293,7 +297,7 @@
       this.playNextLevel();
     }
 
-    if (this.losses >= lives) {
+    if (this.losses >= 1) {
       this.gameOver();
     }
   };
