@@ -32,9 +32,9 @@
       var lives = 4;
 
       init();
+      var game = new Game(ball, player, comp);
       addEvents();
 
-      var game = new Game(ball, player, comp);
       game.showNextLevel();
       game.play();
     </script>
