@@ -126,6 +126,7 @@
   };
 
   Game.prototype.gameOver = function () {
+    scene.remove(this.levelText);
     var levelText = this.createText('Game Over', 0x990000);
     levelText.geometry.computeBoundingBox();
     var width = levelText.geometry.boundingBox.max.x - levelText.geometry.boundingBox.min.x;
@@ -214,14 +215,14 @@
 
   Game.prototype.rotateHearts = function () {
     var id = requestAnimationFrame(this.rotateHearts.bind(this));
-    for (var i = 0; i < lives; i++) {
+    for (var i = 0; i < hearts.length; i++) {
       hearts[i].rotation.y += .1;
     }
     renderer.render(scene, camera);
 
     if (hearts[0].rotation.y >= (Math.PI * 2) + Math.PI / 2) {
       cancelAnimationFrame(id);
-      for (var i = 0; i < lives; i++) {
+      for (var i = 0; i < hearts.length; i++) {
         hearts[i].rotation.y = Math.PI / 2;
       }
     }
