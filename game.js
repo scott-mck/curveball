@@ -173,7 +173,9 @@
   Game.prototype.playerLose = function () {
     this.losses += 1;
     this.stopPlay();
-    this.removeHeart(hearts.pop());
+    setTimeout(function () {
+      this.removeHeart(hearts.pop());
+    }.bind(this), 1000);
   };
 
   Game.prototype.playerWin = function () {
