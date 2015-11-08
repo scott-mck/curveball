@@ -229,6 +229,8 @@
   };
 
   Game.prototype.rotateHearts = function () {
+    if (hearts.length === 0) return;
+
     var id = requestAnimationFrame(this.rotateHearts.bind(this));
     for (var i = 0; i < hearts.length; i++) {
       hearts[i].rotation.y += .1;
