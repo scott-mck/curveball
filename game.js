@@ -25,6 +25,79 @@
     return false;
   };
 
+  Game.prototype.createGameOverButton = function () {
+    var inside = this.createGameOverButtonInside();
+    var outside = this.createGameOverButtonOutside();
+    var base = this.createGameOverButtonBase();
+
+    outside.rotation.x += Math.PI / 2;
+    inside.rotation.x += Math.PI / 2;
+    base.rotation.x += Math.PI / 2;
+
+    var gameOverButton = new THREE.Object3D();
+    var buttonPress = new THREE.Object3D();
+
+    buttonPress.add(inside);
+    buttonPress.add(outside);
+    gameOverButton.add(buttonPress);
+    gameOverButton.buttonPress = buttonPress;
+    gameOverButton.add(base);
+    return gameOverButton;
+  };
+
+  Game.prototype.createGameOverButtonBase = function () {
+    var buttonGeom = this.createGameOverButtonGeometry();
+    var baseMat = new THREE.MeshPhongMaterial({
+      color: 0xa8a8a8,
+      shininess: 100,
+      specular: 0xffffff
+    });
+    var base = new THREE.Mesh(buttonGeom.clone(), baseMat);
+    base.scale.set(7.3, 7.3, .9);
+    return base;
+  };
+
+  Game.prototype.createGameOverButtonGeometry = function () {
+    var path = new THREE.Path();
+    var height = 1;
+    var width = 1;
+    path.moveTo(0, height);
+    path.quadraticCurveTo(width, height, width, height - .2 * height);
+    path.lineTo(width, 0);
+    var list = [];
+    var points = path.getPoints(10);
+    for (var i = 0; i < points.length; i++) {
+      list.push(new THREE.Vector3(points[i].x, 0, -points[i].y));
+    }
+    return new THREE.LatheGeometry(list, 40);
+  };
+
+  Game.prototype.createGameOverButtonInside = function () {
+    var buttonGeom = this.createGameOverButtonGeometry();
+    var insideMat = new THREE.MeshPhongMaterial({
+      color: 0xff0000,
+      shininess: 50
+    });
+    var inside = new THREE.Mesh(buttonGeom.clone(), insideMat);
+    inside.scale.set(6, 6, 6);
+    return inside;
+  };
+
+  Game.prototype.createGameOverButtonOutside = function () {
+    var buttonGeom = this.createGameOverButtonGeometry();
+    var outsideMat = new THREE.MeshPhongMaterial({
+      color: 0xffffff,
+      shininess: 100,
+      specular: 0x000000,
+      transparent: true,
+      opacity: .4
+    });
+    var outside = new THREE.Mesh(buttonGeom.clone(), outsideMat);
+    outside.scale.set(6.7, 6.7, 6.7);
+    return outside;
+  };
+
+
   Game.prototype.createText = function (text, color) {
     var geom = new THREE.TextGeometry(text, {
       font: 'optimer',
@@ -110,9 +183,6 @@
     this.levelText.position.set(-width / 2, 10, 0);
     scene.add(this.levelText);
     this.ball.stop();
-    setTimeout(function () {
-      showPlayAgainModal();
-    }, 1000);
   };
 
   Game.prototype.getCompPaddleSpeed = function () {
