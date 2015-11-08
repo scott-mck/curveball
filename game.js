@@ -5,8 +5,8 @@
     this.comp = comp;
 
     this.level = 0;
-    this.playerCount = 0;
-    this.compCount = 0;
+    this.wins = 0;
+    this.losses = 0;
   };
 
   Game.prototype.checkPaddleCollision = function (dir) {
@@ -170,24 +170,44 @@
   };
 
   Game.prototype.playerLose = function () {
-    this.compCount += 1;
+    this.losses += 1;
     this.stopPlay();
+    this.removeHeart(hearts.pop());
   };
 
   Game.prototype.playerWin = function () {
-    this.playerCount += 1;
+    this.wins += 1;
     this.stopPlay();
+  };
+
+  Game.prototype.removeHeart = function (heart) {
+    if (!heart) return;
+
+    var id = requestAnimationFrame(this.removeHeart.bind(this, heart));
+    heart.rotation.y += .3;
+    heart.position.y -= .1;
+    heart.scale.set(
+      heart.scale.x * .96,
+      heart.scale.y * .96,
+      heart.scale.z * .96
+    );
+
+    if (heart.scale.x <= .1) {
+      cancelAnimationFrame(id);
+      scene.remove(heart);
+    }
+    renderer.render(scene, camera);
   };
 
   Game.prototype.reset = function () {
     this.ball.reset();
     this.comp.resetPos();
-    if (this.playerCount >= 3) {
-      this.playerCount = 0;
+    if (this.wins >= 3) {
+      this.wins = 0;
       this.playNextLevel();
     }
 
-    if (this.compCount >= 4) {
+    if (this.losses >= 4) {
       this.gameOver();
     }
   };
