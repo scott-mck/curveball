@@ -123,7 +123,7 @@ init = function () {
 
 
   hearts = [];
-  for (var i = 0; i < lives; i++) {
+  for (var i = 0; i < lives - 1; i++) {
     var heartMesh = new THREE.Mesh(new THREE.HeartGeometry({ points_per_layer: 41 }), heartMat.clone());
     heartMesh.rotation.y = Math.PI / 2;
     heartMesh.position.x = 12 + i * 3.5;
