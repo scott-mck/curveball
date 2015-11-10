@@ -25,44 +25,63 @@
     return false;
   };
 
-  Game.prototype.createGameOverButton = function () {
-    var inside = this.createGameOverButtonInside();
-    var outside = this.createGameOverButtonOutside();
-    var base = this.createGameOverButtonBase();
+  Game.prototype.createPlayAgainButton = function () {
+    var width = 8;
+    var height = 8;
+    var slope = .2;
 
-    outside.rotation.x += Math.PI / 2;
-    inside.rotation.x += Math.PI / 2;
-    base.rotation.x += Math.PI / 2;
+    var inside = this.createPlayAgainButtonInside(width, height, slope);
+    var outside = this.createPlayAgainButtonOutside(width, height, slope);
+    var base = this.createPlayAgainButtonBase(width, height, slope);
 
-    var gameOverButton = new THREE.Object3D();
+    var playAgainButton = new THREE.Object3D();
     var buttonPress = new THREE.Object3D();
+    playAgainButton.buttonPress = buttonPress;
+
+    playAgainButton.press = function () {
+      var id = requestAnimationFrame(playAgainButton.press);
+      buttonPress.position.z += .3;
+      renderer.render(scene, camera);
+      if (buttonPress.position.z >= height / 2) {
+        cancelAnimationFrame(id);
+        playAgainButton.release();
+      }
+    };
+
+    playAgainButton.release = function () {
+      var id = requestAnimationFrame(playAgainButton.release);
+      buttonPress.position.z -= .15;
+      renderer.render(scene, camera);
+      if (buttonPress.position.z <= 0) {
+        cancelAnimationFrame(id);
+      }
+    };
 
     buttonPress.add(inside);
     buttonPress.add(outside);
-    gameOverButton.add(buttonPress);
-    gameOverButton.buttonPress = buttonPress;
-    gameOverButton.add(base);
-    return gameOverButton;
+    playAgainButton.add(buttonPress);
+    playAgainButton.add(base);
+
+    return playAgainButton;
   };
 
-  Game.prototype.createGameOverButtonBase = function () {
-    var buttonGeom = this.createGameOverButtonGeometry();
+  Game.prototype.createPlayAgainButtonBase = function (width, height, slope) {
+    var buttonGeom = this.createPlayAgainButtonGeometry(width * 1.2, height * .1, slope);
     var baseMat = new THREE.MeshPhongMaterial({
       color: 0xa8a8a8,
       shininess: 100,
       specular: 0xffffff
     });
-    var base = new THREE.Mesh(buttonGeom.clone(), baseMat);
-    base.scale.set(7.3, 7.3, .9);
+    base = new THREE.Mesh(buttonGeom.clone(), baseMat);
+    scene.add(base);
+
     return base;
   };
 
-  Game.prototype.createGameOverButtonGeometry = function () {
+  Game.prototype.createPlayAgainButtonGeometry = function (width, height, slope) {
     var path = new THREE.Path();
-    var height = 1;
-    var width = 1;
     path.moveTo(0, height);
-    path.quadraticCurveTo(width, height, width, height - .2 * height);
+    path.quadraticCurveTo(width, height, width, (1 - slope) * height);
     path.lineTo(width, 0);
     var list = [];
     var points = path.getPoints(10);
@@ -72,42 +91,86 @@
     return new THREE.LatheGeometry(list, 40);
   };
 
-  Game.prototype.createGameOverButtonInside = function () {
-    var buttonGeom = this.createGameOverButtonGeometry();
+  Game.prototype.createPlayAgainButtonInside = function (width, height, slope) {
+    var buttonGeom = this.createPlayAgainButtonGeometry(width, height, slope);
     var insideMat = new THREE.MeshPhongMaterial({
       color: 0xcc0000,
-      shininess: 50
+      shininess: 0
     });
     var inside = new THREE.Mesh(buttonGeom.clone(), insideMat);
-    inside.scale.set(6, 6, 6);
+
+    var text = this.createPlayAgainButtonText(width, height, slope);
+    text.rotation.x -= Math.PI;
+    text.scale.set(1, height / 2, 1);
+
+    var bound = new THREE.Box3();
+    bound.setFromObject(text);
+    var textWidth = bound.max.x - bound.min.x;
+    var textHeight = bound.max.y - bound.min.y;
+
+    inside.add(text)
+    text.position.set(-textWidth / 2, textHeight / 3, -width);
+    scene.add(inside);
     return inside;
   };
 
-  Game.prototype.createGameOverButtonOutside = function () {
-    var buttonGeom = this.createGameOverButtonGeometry();
+  Game.prototype.createPlayAgainButtonOutside = function (width, height, slope) {
+    var buttonGeom = this.createPlayAgainButtonGeometry(width * 1.1, height * 1.1, slope);
     var outsideMat = new THREE.MeshPhongMaterial({
       color: 0x3f3f3f,
       shininess: 100,
       transparent: true,
-      opacity: .4
+      opacity: .3
     });
     var outside = new THREE.Mesh(buttonGeom.clone(), outsideMat);
-    outside.scale.set(6.7, 6.7, 6.7);
+    outside.renderOrder = 1;
+    scene.add(outside);
+
     return outside;
   };
 
+  Game.prototype.createPlayAgainButtonText = function (width, height, slope) {
+    var text = this.createText('Play Again?', {
+      color: 0xffffff,
+      size: width / 5,
+      height: .1,
+      material: 'MeshPhongMaterial'
+    });
 
-  Game.prototype.createText = function (text, color) {
+    var modifier = new THREE.BendModifier();
+    var dir = new THREE.Vector3(0, 0, -1);
+    var axis = new THREE.Vector3(0, 1, 0);
+    var angle = Math.acos((height - slope) / height) / 2;
+
+    modifier.set(dir, axis, angle);
+    modifier.modify(text.geometry);
+
+    modifier.set(dir, new THREE.Vector3(1, 0, 0), angle);
+    modifier.modify(text.geometry);
+
+    return text;
+  };
+
+  Game.prototype.createText = function (text, options) {
+    var params = {
+      color: options.color || 0xffffff,
+      size: options.size || 4,
+      height: options.height || 1,
+      specular: options.specular || 0x7e7e7e,
+      transparent: options.transparent || true,
+      material: options.material || 'MeshPhongMaterial'
+    };
+
     var geom = new THREE.TextGeometry(text, {
       font: 'optimer',
-      size: 4,
-      height: 1
+      size: params.size,
+      height: params.height
     });
-    var mat = new THREE.MeshPhongMaterial({
-      color: color,
+    var mat = new THREE[params.material]({
+      color: params.color,
       shininess: 20,
-      specular: 0x7e7e7e,
-      transparent: true
+      specular: params.specular,
+      transparent: params.transparent
     });
     return new THREE.Mesh(geom, mat);
   };
@@ -179,13 +242,13 @@
     scene.remove(this.levelText);
     this.ball.stop();
 
-    this.levelText = this.createText('Game Over', 0x990000);
+    this.levelText = this.createText('Game Over', { color: 0x990000 });
     this.levelText.geometry.computeBoundingBox();
     var width = this.levelText.geometry.boundingBox.max.x - this.levelText.geometry.boundingBox.min.x;
     this.levelText.position.set(-width / 2, 10, 0);
     scene.add(this.levelText);
 
-    this.showGameOverButton();
+    this.showplayAgainButton();
   };
 
   Game.prototype.getCompPaddleSpeed = function () {
@@ -329,24 +392,29 @@
     $('#canvas').css('cursor', 'default');
   };
 
-  Game.prototype.showGameOverButton = function () {
-    var gameOverButton = this.createGameOverButton();
-    gameOverButton.position.y = -40;
-    scene.add(gameOverButton);
-    function animateGameOverButton () {
-      var id = requestAnimationFrame(animateGameOverButton.bind(this));
-      gameOverButton.position.y += .5;
+  Game.prototype.showplayAgainButton = function () {
+    this.playAgainButton = this.createPlayAgainButton();
+    this.playAgainButton.rotation.x += Math.PI / 2;
+    this.playAgainButton.position.y = -40;
+    this.playAgainButton.position.z = -12;
+    scene.add(this.playAgainButton);
+
+    function animateplayAgainButton () {
+      var id = requestAnimationFrame(animateplayAgainButton.bind(this));
+      this.playAgainButton.position.y += .5;
       renderer.render(scene, camera);
-      if (gameOverButton.position.y >= -15) cancelAnimationFrame(id);
+      if (this.playAgainButton.position.y >= -wallHeight / 2 + wallDepth / 2) {
+        cancelAnimationFrame(id);
+      }
     }
-    animateGameOverButton();
+    animateplayAgainButton.call(this);
   };
 
   Game.prototype.showNextLevel = function () {
     this.level += 1;
 
     scene.remove(this.levelText);
-    this.levelText = this.createText('Level ' + this.level, 0x00004c);
+    this.levelText = this.createText('Level ' + this.level, { color: 0x00004c });
     this.levelText.material.opacity = 0;
     this.levelText.geometry.computeBoundingBox();
     var width = this.levelText.geometry.boundingBox.max.x - this.levelText.geometry.boundingBox.min.x;
