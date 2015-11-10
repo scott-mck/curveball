@@ -3,11 +3,30 @@
     this.ball = ball;
     this.player = player;
     this.comp = comp;
+    this.playAgainButton;
 
     this.level = 0;
     this.wins = 0;
     this.losses = 0;
   };
+
+  Game.prototype.checkButtonPress = function (event) {
+    var canvasBox = renderer.domElement.getBoundingClientRect();
+    var canvasMouseX = event.clientX - canvasBox.left;
+    var canvasMouseY = event.clientY - canvasBox.top;
+
+    var mouse = new THREE.Vector2();
+    mouse.x = (canvasMouseX / renderer.domElement.clientWidth) * 2 - 1;
+    mouse.y = -(canvasMouseY / renderer.domElement.clientHeight) * 2 + 1;
+
+    var ray = new THREE.Raycaster();
+    ray.setFromCamera(mouse, camera);
+    var hits = ray.intersectObjects([this.playAgainButton.buttonPress], true);
+
+    if (hits.length > 0) {
+      this.playAgainButton.press(this.playAgain.bind(this));
+    }
+  }
 
   Game.prototype.checkPaddleCollision = function (dir) {
     if (this.ball.dead) return;
@@ -43,22 +62,27 @@
     playAgainButton.add(base);
 
     playAgainButton.buttonPress = buttonPress;
-    playAgainButton.press = function () {
-      var id = requestAnimationFrame(playAgainButton.press);
+    playAgainButton.press = function (callback) {
+      var id = requestAnimationFrame(function () {
+        playAgainButton.press(callback);
+      });
       buttonPress.position.z += .3;
       renderer.render(scene, camera);
       if (buttonPress.position.z >= height / 2) {
         cancelAnimationFrame(id);
-        playAgainButton.release();
+        playAgainButton.release(callback);
       }
     };
 
-    playAgainButton.release = function () {
-      var id = requestAnimationFrame(playAgainButton.release);
+    playAgainButton.release = function (callback) {
+      var id = requestAnimationFrame(function () {
+        playAgainButton.release(callback);
+      });
       buttonPress.position.z -= .15;
       renderer.render(scene, camera);
       if (buttonPress.position.z <= 0) {
         cancelAnimationFrame(id);
+        callback && callback();
       }
     };
     return playAgainButton;
@@ -249,6 +273,7 @@
     scene.add(this.levelText);
 
     this.showplayAgainButton();
+    $(document).click(this.checkButtonPress.bind(this));
   };
 
   Game.prototype.getCompPaddleSpeed = function () {
@@ -310,6 +335,7 @@
   };
 
   Game.prototype.playAgain = function () {
+    $(document).off('click');
     addAllHearts();
     this.level = 0;
     this.wins = 0;
