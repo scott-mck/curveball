@@ -4,7 +4,6 @@ function init () {
   createBall();
   addWalls();
   createPaddles();
-  addAllHearts();
 
   ball = new Ball(ballMesh);
   player = new Paddle(playerMesh);
@@ -106,22 +105,4 @@ function createPaddles () {
   compMesh = new THREE.Mesh(geom.clone(), mat.clone());
   compMesh.position.z = -distance;
   scene.add(compMesh);
-}
-
-function addAllHearts() {
-  var heartGeom = new THREE.HeartGeometry({ points_per_layer: 41 });
-  var heartMat = new THREE.MeshPhongMaterial({
-    color: 0xff0000,
-    specular: 0x696969,
-    shininess: 40
-  });
-  for (var i = 0; i < lives - 1; i++) {
-    var heartMesh = new THREE.Mesh(heartGeom.clone(), heartMat.clone());
-    heartMesh.rotation.y = Math.PI / 2;
-    heartMesh.position.x = 12 + i * 3.5;
-    heartMesh.position.y += 17;
-    heartMesh.scale.set(1.3, 1.3, 1.3);
-    scene.add(heartMesh);
-    hearts.push(heartMesh);
-  }
 }
