@@ -24,7 +24,10 @@
     var hits = ray.intersectObjects([this.playAgainButton.buttonPress], true);
 
     if (hits.length > 0) {
-      this.playAgainButton.press(this.playAgain.bind(this));
+      this.playAgainButton.press(function () {
+        scene.remove(this.playAgainButton);
+        this.playAgain();
+      }.bind(this));
     }
   }
 
@@ -419,10 +422,12 @@
   };
 
   Game.prototype.showplayAgainButton = function () {
-    this.playAgainButton = this.createPlayAgainButton();
-    this.playAgainButton.rotation.x += Math.PI / 2;
-    this.playAgainButton.position.y = -40;
-    this.playAgainButton.position.z = -12;
+    if (!this.playAgainButton) {
+      this.playAgainButton = this.createPlayAgainButton();
+      this.playAgainButton.rotation.x += Math.PI / 2;
+      this.playAgainButton.position.y = -40;
+      this.playAgainButton.position.z = -12;
+    }
     scene.add(this.playAgainButton);
 
     function animateplayAgainButton () {
