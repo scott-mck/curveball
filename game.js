@@ -8,6 +8,40 @@
     this.level = 0;
     this.wins = 0;
     this.losses = 0;
+    this.hearts = [];
+    this.removedHearts = [];
+  };
+
+  Game.prototype.animate = function () {
+    requestAnimationFrame(this.animate.bind(this));
+
+    if (this.ball.inPlay) this.detectCollisions();
+
+    this.player.updatePos();
+    this.comp.move(this.ball);
+
+    this.ball.updatePos();
+    this.ball.spin();
+
+    renderer.render(scene, camera);
+  };
+
+  Game.prototype.addAllHearts = function () {
+    var heartGeom = new THREE.HeartGeometry({ points_per_layer: 41 });
+    var heartMat = new THREE.MeshPhongMaterial({
+      color: 0xff0000,
+      specular: 0x696969,
+      shininess: 40
+    });
+    for (var i = 0; i < lives - 1; i++) {
+      var heartMesh = new THREE.Mesh(heartGeom.clone(), heartMat.clone());
+      heartMesh.rotation.y = Math.PI / 2;
+      heartMesh.position.x = 12 + i * 3.5;
+      heartMesh.position.y = 17;
+      heartMesh.scale.set(1.3, 1.3, 1.3);
+      scene.add(heartMesh);
+      this.hearts.push(heartMesh);
+    }
   };
 
   Game.prototype.checkButtonPress = function (event) {
@@ -322,22 +356,13 @@
   };
 
   Game.prototype.play = function () {
-    requestAnimationFrame(this.play.bind(this));
-
-    if (this.ball.inPlay) this.detectCollisions();
-
-    this.player.updatePos();
-    this.comp.move(this.ball);
-
-    this.ball.updatePos();
-    this.ball.spin();
-
-    renderer.render(scene, camera);
+    this.addAllHearts();
+    this.animate();
   };
 
   Game.prototype.playAgain = function () {
     $(document).off('click');
-    addAllHearts();
+    this.addAllHearts();
     this.level = 0;
     this.wins = 0;
     this.losses = 0;
@@ -357,7 +382,10 @@
     this.losses += 1;
     this.stopPlay();
     setTimeout(function () {
-      this.removeHeart(hearts.pop());
+      if (this.hearts.length === 0) return;
+      var heart = this.hearts.pop();
+      this.removedHearts.push(heart);
+      this.removeHeart(heart);
     }.bind(this), 1000);
   };
 
@@ -367,8 +395,6 @@
   };
 
   Game.prototype.removeHeart = function (heart) {
-    if (!heart) return;
-
     var id = requestAnimationFrame(this.removeHeart.bind(this, heart));
     heart.rotation.y += .3;
     heart.position.y -= .1;
@@ -389,7 +415,6 @@
       this.removePlayAgainButton(callback);
     }.bind(this));
     this.playAgainButton.position.y -= .5;
-    renderer.rende
 
     if (this.playAgainButton.position.y <= -40) {
       cancelAnimationFrame(id);
@@ -411,18 +436,23 @@
     }
   };
 
-  Game.prototype.rotateHearts = function () {
-    if (hearts.length === 0) return;
+  Game.prototype.resetHearts = function () {
+    for (var i = 0; i < this.removedHearts.length; i++) {
+      this.hearts.push(this.removedHearts[i]);
+      scene.add(this.hearts[i]);
+    }
+  };
 
+  Game.prototype.rotateHearts = function () {
     var id = requestAnimationFrame(this.rotateHearts.bind(this));
-    for (var i = 0; i < hearts.length; i++) {
-      hearts[i].rotation.y += .1;
+    for (var i = 0; i < this.hearts.length; i++) {
+      this.hearts[i].rotation.y += .1;
     }
 
-    if (hearts[0].rotation.y >= (Math.PI * 2) + Math.PI / 2) {
+    if (this.hearts[0].rotation.y >= (Math.PI * 2) + Math.PI / 2) {
       cancelAnimationFrame(id);
-      for (var i = 0; i < hearts.length; i++) {
-        hearts[i].rotation.y = Math.PI / 2;
+      for (var i = 0; i < this.hearts.length; i++) {
+        this.hearts[i].rotation.y = Math.PI / 2;
       }
     }
   };
