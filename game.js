@@ -23,11 +23,13 @@
     ray.setFromCamera(mouse, camera);
     var hits = ray.intersectObjects([this.playAgainButton.buttonPress], true);
 
+    var that = this;
     if (hits.length > 0) {
-      this.playAgainButton.press(function () {
-        scene.remove(this.playAgainButton);
-        this.playAgain();
-      }.bind(this));
+      that.playAgainButton.press(function () {
+        setTimeout(function () {
+          that.removePlayAgainButton(that.playAgain.bind(that));
+        }, 300);
+      });
     }
   }
 
@@ -70,7 +72,6 @@
         playAgainButton.press(callback);
       });
       buttonPress.position.z += .3;
-      renderer.render(scene, camera);
       if (buttonPress.position.z >= height / 2) {
         cancelAnimationFrame(id);
         playAgainButton.release(callback);
@@ -82,7 +83,6 @@
         playAgainButton.release(callback);
       });
       buttonPress.position.z -= .15;
-      renderer.render(scene, camera);
       if (buttonPress.position.z <= 0) {
         cancelAnimationFrame(id);
         callback && callback();
@@ -253,7 +253,6 @@
       this.fadeInText(levelText, callback);
     }.bind(this));
     levelText.material.opacity += .02;
-    renderer.render(scene, camera);
 
     if (levelText.material.opacity >= 1) {
       cancelAnimationFrame(id);
@@ -315,7 +314,6 @@
     levelText.geometry.boundingBox.max.x *= .97;
     var width = levelText.geometry.boundingBox.max.x - levelText.geometry.boundingBox.min.x;
     levelText.position.setX(-width / 2);
-    renderer.render(scene, camera);
 
     if (levelText.position.y >= 14) {
       cancelAnimationFrame(id);
@@ -383,7 +381,20 @@
       cancelAnimationFrame(id);
       scene.remove(heart);
     }
-    renderer.render(scene, camera);
+  };
+
+  Game.prototype.removePlayAgainButton = function (callback) {
+    var id = requestAnimationFrame(function () {
+      this.removePlayAgainButton(callback);
+    }.bind(this));
+    this.playAgainButton.position.y -= .5;
+    renderer.rende
+
+    if (this.playAgainButton.position.y <= -40) {
+      cancelAnimationFrame(id);
+      scene.remove(this.playAgainButton);
+      callback && callback();
+    }
   };
 
   Game.prototype.reset = function () {
@@ -406,7 +417,6 @@
     for (var i = 0; i < hearts.length; i++) {
       hearts[i].rotation.y += .1;
     }
-    renderer.render(scene, camera);
 
     if (hearts[0].rotation.y >= (Math.PI * 2) + Math.PI / 2) {
       cancelAnimationFrame(id);
@@ -433,7 +443,6 @@
     function animateplayAgainButton () {
       var id = requestAnimationFrame(animateplayAgainButton.bind(this));
       this.playAgainButton.position.y += .5;
-      renderer.render(scene, camera);
       if (this.playAgainButton.position.y >= -wallHeight / 2 + wallDepth / 2) {
         cancelAnimationFrame(id);
       }
