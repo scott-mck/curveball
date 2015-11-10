@@ -36,8 +36,13 @@
 
     var playAgainButton = new THREE.Object3D();
     var buttonPress = new THREE.Object3D();
-    playAgainButton.buttonPress = buttonPress;
 
+    buttonPress.add(inside);
+    buttonPress.add(outside);
+    playAgainButton.add(buttonPress);
+    playAgainButton.add(base);
+
+    playAgainButton.buttonPress = buttonPress;
     playAgainButton.press = function () {
       var id = requestAnimationFrame(playAgainButton.press);
       buttonPress.position.z += .3;
@@ -56,12 +61,6 @@
         cancelAnimationFrame(id);
       }
     };
-
-    buttonPress.add(inside);
-    buttonPress.add(outside);
-    playAgainButton.add(buttonPress);
-    playAgainButton.add(base);
-
     return playAgainButton;
   };
 
@@ -152,6 +151,7 @@
   };
 
   Game.prototype.createText = function (text, options) {
+    if (!options) options = {};
     var params = {
       color: options.color || 0xffffff,
       size: options.size || 4,
