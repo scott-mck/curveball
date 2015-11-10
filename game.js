@@ -293,7 +293,7 @@
   };
 
   Game.prototype.hideCursor = function () {
-    this.player.canMove = true;
+    scene.add(this.player.mesh);
     $('#canvas').css('cursor', 'none');
   };
 
@@ -414,7 +414,7 @@
   };
 
   Game.prototype.showCursor = function () {
-    this.player.canMove = false;
+    scene.remove(this.player.mesh);
     $('#canvas').css('cursor', 'default');
   };
 
