@@ -71,8 +71,8 @@
       var id = requestAnimationFrame(function () {
         playAgainButton.press(callback);
       });
-      buttonPress.position.z += .3;
-      if (buttonPress.position.z >= height / 2) {
+      buttonPress.position.z += .4;
+      if (buttonPress.position.z >= height / 1.5) {
         cancelAnimationFrame(id);
         playAgainButton.release(callback);
       }
@@ -82,7 +82,7 @@
       var id = requestAnimationFrame(function () {
         playAgainButton.release(callback);
       });
-      buttonPress.position.z -= .15;
+      buttonPress.position.z -= .2;
       if (buttonPress.position.z <= 0) {
         cancelAnimationFrame(id);
         callback && callback();
