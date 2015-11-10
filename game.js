@@ -342,6 +342,7 @@
     this.wins = 0;
     this.losses = 0;
     this.reset();
+    this.ball.resetSpeed();
     this.hideCursor();
     this.showNextLevel();
   };

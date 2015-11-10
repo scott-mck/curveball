@@ -45,6 +45,10 @@
     ballMesh.light.color.setHex(0x006600);
   };
 
+  Ball.prototype.resetSpeed = function () {
+    this.startSpeed = -1;
+  };
+
   Ball.prototype.resetSpin = function () {
     this.spinX = 0;
     this.spinY = 0;
