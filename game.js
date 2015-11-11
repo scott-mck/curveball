@@ -363,11 +363,15 @@
   Game.prototype.playAgain = function () {
     $(document).off('click');
     this.addAllHearts();
+
     this.level = 0;
     this.wins = 0;
     this.losses = 0;
+
     this.reset();
     this.ball.resetSpeed();
+    this.comp.resetMaxSpeed();
+
     this.hideCursor();
     this.showNextLevel();
   };

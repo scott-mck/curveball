@@ -65,6 +65,10 @@
     this.updatePos();
   };
 
+  Paddle.prototype.resetMaxSpeed = function () {
+    this.compMaxSpeed = .3;
+  };
+
   Paddle.prototype.resetPos = function () {
     this.posX = 0;
     this.posY = 0;
