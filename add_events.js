@@ -25,8 +25,8 @@ addEvents = function () {
         if (width * scale > windowWidth) scale = windowWidth / width;
       }
 
-      $('canvas').css('width', width * scale * canvasSize + 'px');
-      $('canvas').css('height', height * scale * canvasSize + 'px');
+      $('#canvas').css('width', width * scale * canvasSize + 'px');
+      $('#canvas').css('height', height * scale * canvasSize + 'px');
 
       camera.aspect = (width * scale) / (height * scale);
       camera.updateProjectionMatrix();
