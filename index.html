@@ -14,7 +14,8 @@
 		<script type="application/javascript" src="game.js"></script>
   </head>
   <body>
-    <div id="canvas" style="width: 1000px; height: 600px;"></div>
+    <div id="canvas" style="width: 700px; height: 400px;"></div>
+
     <script>
       var canvasWidth, canvasHeight;
       var scene, camera, renderer;
@@ -35,6 +36,7 @@
       init();
       var game = new Game(ball, player, comp);
       addEvents();
+      game.hideCursor();
 
       game.showNextLevel();
       game.play();
