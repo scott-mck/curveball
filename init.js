@@ -1,4 +1,19 @@
-function init () {
+var canvasWidth, canvasHeight;
+var scene, camera, renderer;
+var leftWallMesh, rightWallMesh, floorMesh, ceilingMesh;
+var ballMesh, playerMesh, compMesh;
+var ball, player, comp, game;
+
+var wallWidth = 65;
+var wallHeight = 45;
+var wallDepth = 1;
+var distance = 100;
+var radius = 3;
+var paddleWidth = 12;
+var paddleHeight = 8;
+var lives = 4;
+
+init = function () {
   setScene();
   addLight();
   createBall();
@@ -8,22 +23,8 @@ function init () {
   ball = new Ball(ballMesh);
   player = new Paddle(playerMesh);
   comp = new Paddle(compMesh);
+  game = new Game(ball, player, comp);
 };
-
-function setScene () {
-  canvasWidth = $('#canvas').width();
-  canvasHeight = $('#canvas').height();
-  var container = document.getElementById('canvas');
-  document.body.appendChild(container);
-  renderer = new THREE.WebGLRenderer();
-  renderer.setPixelRatio(devicePixelRatio);
-  renderer.setSize(canvasWidth, canvasHeight);
-  container.appendChild(renderer.domElement);
-
-  scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(70, canvasWidth / canvasHeight, 1, 1000);
-  camera.position.z = 30;
-}
 
 function addLight () {
   var ambient = new THREE.AmbientLight(0x404040);
@@ -32,24 +33,6 @@ function addLight () {
   var light = new THREE.PointLight(0xffffff, 1, 200);
   light.position.set(10, 8, 30);
   scene.add(light);
-}
-
-function createBall() {
-  var geom = new THREE.SphereGeometry(radius, 20, 20);
-  var mat = new THREE.MeshPhongMaterial({
-    color: 0x006600,
-    specular: 0xffffff,
-    shininess: 6,
-    shading: THREE.SmoothShading
-  });
-  ballMesh = new THREE.Mesh(geom, mat);
-  ballMesh.position.z = -radius;
-
-  var light = new THREE.PointLight(0x006600, 1, 40);
-  light.position.copy(ballMesh.position);
-  ballMesh.add(light);
-  ballMesh.light = light;
-  scene.add(ballMesh);
 }
 
 function addWalls () {
@@ -90,6 +73,24 @@ function addWalls () {
   scene.add(ceilingMesh);
 }
 
+function createBall () {
+  var geom = new THREE.SphereGeometry(radius, 20, 20);
+  var mat = new THREE.MeshPhongMaterial({
+    color: 0x006600,
+    specular: 0xffffff,
+    shininess: 6,
+    shading: THREE.SmoothShading
+  });
+  ballMesh = new THREE.Mesh(geom, mat);
+  ballMesh.position.z = -radius;
+
+  var light = new THREE.PointLight(0x006600, 1, 40);
+  light.position.copy(ballMesh.position);
+  ballMesh.add(light);
+  ballMesh.light = light;
+  scene.add(ballMesh);
+}
+
 function createPaddles () {
   var geom = new THREE.BoxGeometry(paddleWidth, paddleHeight, .1);
   var mat = new THREE.MeshBasicMaterial({
@@ -105,4 +106,19 @@ function createPaddles () {
   compMesh = new THREE.Mesh(geom.clone(), mat.clone());
   compMesh.position.z = -distance;
   scene.add(compMesh);
+}
+
+function setScene () {
+  canvasWidth = $('#canvas').width();
+  canvasHeight = $('#canvas').height();
+  var container = document.getElementById('canvas');
+  document.body.appendChild(container);
+  renderer = new THREE.WebGLRenderer();
+  renderer.setPixelRatio(devicePixelRatio);
+  renderer.setSize(canvasWidth, canvasHeight);
+  container.appendChild(renderer.domElement);
+
+  scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(70, canvasWidth / canvasHeight, 1, 1000);
+  camera.position.z = 30;
 }
