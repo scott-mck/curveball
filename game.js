@@ -246,9 +246,11 @@
     if (ballMesh.position.x <= leftWallMesh.position.x + radius) {
       this.ball.mesh.position.x = leftWallMesh.position.x + radius;
       this.ball.speedX *= -1;
+      bounceSoundX.play();
     } else if (ballMesh.position.x >= rightWallMesh.position.x - radius) {
       this.ball.mesh.position.x = rightWallMesh.position.x - radius;
       this.ball.speedX *= -1;
+      bounceSoundX.play();
     }
   };
 
@@ -256,9 +258,11 @@
     if (ballMesh.position.y <= floorMesh.position.y + radius) {
       this.ball.mesh.position.y = floorMesh.position.y + radius;
       this.ball.speedY *= -1;
+      bounceSoundY.play();
     } else if (ballMesh.position.y >= ceilingMesh.position.y - radius) {
       this.ball.mesh.position.y = ceilingMesh.position.y - radius;
       this.ball.speedY *= -1;
+      bounceSoundY.play();
     }
   };
 
@@ -268,7 +272,9 @@
         this.ball.mesh.position.z = -distance + radius;
         this.ball.speedZ *= -1;
         this.getCompPaddleSpeed();
+        hitSound.play();
       } else {
+        deadSound.play();
         this.playerWin();
       }
     } else if (ballMesh.position.z > -radius) {
@@ -276,7 +282,9 @@
         this.ball.mesh.position.z = -radius;
         this.ball.speedZ *= -1;
         this.getPlayerPaddleSpeed();
+        hitSound.play();
       } else {
+        deadSound.play();
         this.playerLose();
       }
     }

@@ -3,6 +3,7 @@ var scene, camera, renderer;
 var leftWallMesh, rightWallMesh, floorMesh, ceilingMesh;
 var ballMesh, playerMesh, compMesh;
 var ball, player, comp, game;
+var hitSound, bounceSoundX, bounceSoundY, deadSound;
 
 var wallWidth = 65;
 var wallHeight = 45;
@@ -24,6 +25,11 @@ init = function () {
   player = new Paddle(playerMesh);
   comp = new Paddle(compMesh);
   game = new Game(ball, player, comp);
+
+  hitSound = new Audio('sounds/ball_hit.mp3');
+  bounceSoundX = new Audio('sounds/ball_bounce.mp3');
+  bounceSoundY = new Audio('sounds/ball_bounce.mp3');
+  deadSound = new Audio('sounds/ball_dead.mp3');
 };
 
 function addLight () {
